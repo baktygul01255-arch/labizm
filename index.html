@@ -1,0 +1,2209 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Лаборатория измерений — учебный проект по физике, 7–8 класс. Приборы, тренажёр шкал, работы учащихся и рейтинг по критериям ЗЕРДЕ.">
+<meta name="theme-color" content="#0B6F69">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 34 34%27%3E%3Crect width=%2734%27 height=%2734%27 rx=%278%27 fill=%27%230B6F69%27/%3E%3Cpath d=%27M7 26h20%27 stroke=%27%23fff%27 stroke-width=%271.6%27/%3E%3Cpath d=%27M17 26 23 8%27 stroke=%27%23FFB44D%27 stroke-width=%272.6%27 stroke-linecap=%27round%27/%3E%3Ccircle cx=%2717%27 cy=%2726%27 r=%272.4%27 fill=%27%23FFB44D%27/%3E%3C/svg%3E">
+<title>Лаборатория измерений</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#EEF3EF; --grid:rgba(11,111,105,.085); --grid2:rgba(11,111,105,.17);
+  --surface:#FBFDFB; --surface2:#E3ECE7; --line:#C4D3CB;
+  --ink:#10231F; --ink2:#4A625B;
+  --brand:#0B6F69; --brand-ink:#FFFFFF; --brand-soft:#D2EBE5;
+  --read:#A64B00; --read-soft:#FBE7D3;
+  --good:#1F7A3E; --warn:#9A5B00; --bad:#B3261E;
+  --lcd-bg:#10201D; --lcd-ink:#FFB44D; --lcd-dim:#7E9A92;
+  --gold:#B8860B; --silver:#6F7C86; --bronze:#A25A25;
+  --shadow:0 1px 0 rgba(16,35,31,.05),0 6px 18px -10px rgba(16,35,31,.35);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C1A1E; --grid:rgba(90,210,190,.055); --grid2:rgba(90,210,190,.105);
+    --surface:#12262B; --surface2:#19333A; --line:#29474F;
+    --ink:#E4F0EC; --ink2:#9DB8B1;
+    --brand:#43C6B5; --brand-ink:#062421; --brand-soft:#15393B;
+    --read:#FFB44D; --read-soft:#3B2A17;
+    --good:#6ED09A; --warn:#F0B05A; --bad:#FF8A80;
+    --lcd-bg:#081513; --lcd-ink:#FFB44D; --lcd-dim:#6F8B83;
+    --gold:#E6C25A; --silver:#B6C2CA; --bronze:#D9935B;
+    --shadow:0 1px 0 rgba(0,0,0,.3),0 8px 20px -10px rgba(0,0,0,.7);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C1A1E; --grid:rgba(90,210,190,.055); --grid2:rgba(90,210,190,.105);
+  --surface:#12262B; --surface2:#19333A; --line:#29474F;
+  --ink:#E4F0EC; --ink2:#9DB8B1;
+  --brand:#43C6B5; --brand-ink:#062421; --brand-soft:#15393B;
+  --read:#FFB44D; --read-soft:#3B2A17;
+  --good:#6ED09A; --warn:#F0B05A; --bad:#FF8A80;
+  --lcd-bg:#081513; --lcd-ink:#FFB44D; --lcd-dim:#6F8B83;
+  --gold:#E6C25A; --silver:#B6C2CA; --bronze:#D9935B;
+  --shadow:0 1px 0 rgba(0,0,0,.3),0 8px 20px -10px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html body{
+  margin:0; min-height:100%;
+  font:15px/1.55 "IBM Plex Sans","Segoe UI",Roboto,"Noto Sans",system-ui,sans-serif;
+  color:var(--ink); background-color:var(--bg);
+  background-image:
+    linear-gradient(var(--grid2) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid2) 1px,transparent 1px),
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:48px 48px,48px 48px,12px 12px,12px 12px;
+  -webkit-text-size-adjust:100%;
+}
+h1,h2,h3,h4{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",Roboto,sans-serif;font-weight:700;line-height:1.15;margin:0;text-wrap:balance;letter-spacing:.005em}
+p{margin:0}
+a{color:var(--brand)}
+button,input,select,textarea{font:inherit;color:inherit}
+svg{display:block}
+.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+.wrap{max-width:1140px;margin:0 auto;padding-inline:16px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:4px}
+
+/* ---------- header ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.top-in{display:grid;grid-template-columns:auto 1fr auto;gap:8px 18px;align-items:center;padding-block:8px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);min-width:0}
+.brand svg{flex:none}
+.brand b{font-family:"IBM Plex Sans Condensed",sans-serif;font-size:19px;letter-spacing:.01em;display:block;line-height:1.1}
+.brand small{display:block;font-size:11.5px;color:var(--ink2);line-height:1.2}
+.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{appearance:none;border:0;background:none;cursor:pointer;padding:10px 14px;font-weight:500;color:var(--ink2);white-space:nowrap;position:relative;border-radius:6px;display:flex;gap:7px;align-items:center}
+.tab:hover{color:var(--ink);background:var(--surface2)}
+.tab[aria-selected="true"]{color:var(--ink)}
+.tab[aria-selected="true"]::after{content:"";position:absolute;left:12px;right:12px;bottom:0;height:3px;border-radius:2px 2px 0 0;background:var(--read)}
+.tab .cnt{font:500 11px "IBM Plex Mono",monospace;background:var(--surface2);color:var(--ink2);padding:1px 6px;border-radius:4px}
+.ctl{display:flex;gap:8px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--surface)}
+.seg button{appearance:none;border:0;background:none;padding:6px 10px;font:600 12.5px "IBM Plex Sans",sans-serif;cursor:pointer;color:var(--ink2);letter-spacing:.03em}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.seg button:not([aria-pressed="true"]):hover{background:var(--surface2)}
+.ibtn{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:7px;width:36px;height:34px;display:grid;place-items:center;cursor:pointer;color:var(--ink)}
+.ibtn:hover{background:var(--surface2)}
+.ibtn svg{width:18px;height:18px}
+@media (max-width:860px){
+  .top-in{grid-template-columns:1fr auto}
+  .tabs{grid-column:1/-1;grid-row:2;margin-inline:-6px}
+  .brand small{display:none}
+}
+
+/* ---------- generic ---------- */
+main{padding-block:22px 64px;min-height:70vh}
+.sec{margin-top:34px}
+.sec-h{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:8px 16px;margin-bottom:0}
+.sec-h h2{font-size:26px}
+.sec-h p{color:var(--ink2);max-width:62ch}
+.ic{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ic.ui{stroke-width:2}
+.note svg,.chip svg{display:inline-block;vertical-align:-2px;width:15px;height:15px}
+.drop svg{margin:0 auto 6px;width:24px;height:24px}
+.ticks{height:9px;margin-top:10px;opacity:.55;
+  background:
+   repeating-linear-gradient(90deg,var(--ink) 0 1.5px,transparent 1.5px 40px) 0 0/100% 9px no-repeat,
+   repeating-linear-gradient(90deg,var(--ink2) 0 1px,transparent 1px 8px) 0 0/100% 5px no-repeat}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px}
+.pad{padding:16px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
+.g3{grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr))}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sp{flex:1}
+.muted{color:var(--ink2)}
+.small{font-size:13px}
+.kick{font:600 11.5px "IBM Plex Sans",sans-serif;letter-spacing:.09em;text-transform:uppercase;color:var(--ink2)}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;padding:2px 8px;border-radius:4px;background:var(--surface2);color:var(--ink2);border:1px solid transparent;white-space:nowrap}
+.chip.brand{background:var(--brand-soft);color:var(--brand)}
+.chip.read{background:var(--read-soft);color:var(--read)}
+.chip.ex{border:1px dashed var(--read);background:transparent;color:var(--read)}
+.chip.warn{color:var(--warn);border-color:currentColor;background:transparent}
+.btn{appearance:none;display:inline-flex;gap:7px;align-items:center;justify-content:center;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-weight:600;font-size:14px;padding:9px 15px;border-radius:7px;cursor:pointer;text-decoration:none;line-height:1.2}
+.btn:hover{background:var(--surface2)}
+.btn.pri{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.btn.pri:hover{filter:brightness(1.08)}
+.btn.sm{padding:6px 11px;font-size:13px}
+.btn.danger{color:var(--bad);border-color:currentColor;background:transparent}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn svg{width:16px;height:16px;flex:none}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+.pill{appearance:none;cursor:pointer;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 13px;font-size:13px;font-weight:500;color:var(--ink2)}
+.pill[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.pill:not([aria-pressed="true"]):hover{background:var(--surface2)}
+.note{border-left:3px solid var(--read);background:var(--read-soft);padding:10px 13px;border-radius:0 6px 6px 0;font-size:13.5px}
+.note.brand{border-color:var(--brand);background:var(--brand-soft)}
+.empty{padding:34px 16px;text-align:center;color:var(--ink2);border:1px dashed var(--line);border-radius:8px;background:var(--surface)}
+
+/* ---------- form controls ---------- */
+label.f{display:block;font-weight:600;font-size:13px;margin-bottom:5px}
+label.f .h{font-weight:400;color:var(--ink2)}
+.in,select.in,textarea.in{width:100%;padding:8px 10px;border:1px solid var(--line);background:var(--surface);border-radius:6px;color:var(--ink);min-height:38px}
+textarea.in{resize:vertical;min-height:84px;line-height:1.45}
+.in:focus{outline:2px solid var(--brand);outline-offset:0;border-color:var(--brand)}
+.fld{margin-bottom:12px}
+.fgrid{display:grid;gap:0 14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+.hint{font-size:12.5px;color:var(--ink2);margin-top:4px}
+.err{color:var(--bad);font-size:13px;margin-top:6px}
+
+/* ---------- hero ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:22px;align-items:center}
+.hero h1{font-size:clamp(34px,6vw,58px);letter-spacing:0}
+.hero .lead{font-size:17px;color:var(--ink2);max-width:52ch;margin-top:12px}
+.hero .row{margin-top:18px}
+.lcd{background:var(--lcd-bg);border-radius:10px;padding:16px 18px 14px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06),var(--shadow);color:var(--lcd-dim)}
+.lcd-top{display:flex;justify-content:space-between;font:500 10.5px "IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase}
+.lcd-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;margin-top:12px}
+.lcd-v{font:600 clamp(30px,5vw,44px)/1 "IBM Plex Mono",monospace;color:var(--lcd-ink);text-shadow:0 0 14px rgba(255,180,77,.28)}
+.lcd-l{font-size:12px;margin-top:3px}
+@media (max-width:820px){.hero{grid-template-columns:1fr}}
+
+/* ---------- device cards ---------- */
+.dev{display:flex;flex-direction:column;gap:10px;padding:14px;text-align:left;cursor:pointer;width:100%;appearance:none;font:inherit;color:inherit;transition:border-color .15s,transform .15s}
+.dev:hover{border-color:var(--brand);transform:translateY(-2px)}
+.dev-ic{width:54px;height:54px;border-radius:8px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;flex:none}
+.dev-ic svg{width:34px;height:34px}
+.dev h3{font-size:19px}
+.dev .ms{font-size:13px;color:var(--ink2)}
+.dev-top{display:flex;gap:12px;align-items:center}
+.diy .dev-ic{background:var(--read-soft);color:var(--read)}
+.saf{counter-reset:s;display:grid;gap:8px;padding:0;margin:0;list-style:none}
+.saf li{counter-increment:s;display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start;padding:10px 12px;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+.saf li::before{content:counter(s);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--read-soft);color:var(--read);font:600 13px "IBM Plex Mono",monospace}
+.linkrow{display:flex;flex-wrap:wrap;gap:8px}
+
+/* ---------- dialog ---------- */
+dialog{border:1px solid var(--line);border-radius:12px;padding:0;background:var(--surface);color:var(--ink);width:min(940px,calc(100vw - 20px));max-height:calc(100dvh - 24px);box-shadow:0 30px 80px -20px rgba(0,0,0,.55);overflow:hidden}
+dialog[open]{display:flex;flex-direction:column}
+dialog::backdrop{background:rgba(6,20,22,.62)}
+.dlg-h{display:flex;gap:12px;align-items:flex-start;padding:16px 18px 12px;border-bottom:1px solid var(--line);background:var(--surface)}
+.dlg-h h2{font-size:24px;flex:1;min-width:0;overflow-wrap:anywhere}
+.dlg-b{overflow:auto;padding:16px 18px 20px;flex:1}
+.dlg-f{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 18px;border-top:1px solid var(--line);background:var(--surface2)}
+.lb img{max-width:100%;max-height:calc(100dvh - 120px);margin:auto}
+.big-ic{width:64px;height:64px;border-radius:10px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;flex:none}
+.big-ic svg{width:42px;height:42px}
+.steps{margin:6px 0 0;padding-left:20px;display:grid;gap:6px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0}
+.kv dt{color:var(--ink2);font-size:13px}
+.kv dd{margin:0}
+
+/* ---------- works ---------- */
+.wcard{display:flex;flex-direction:column;overflow:hidden;cursor:pointer;text-align:left;padding:0;appearance:none;font:inherit;color:inherit;width:100%;transition:border-color .15s,transform .15s}
+.wcard:hover{border-color:var(--brand);transform:translateY(-2px)}
+.wcover{height:130px;background:var(--brand-soft);display:grid;place-items:center;color:var(--brand);position:relative;overflow:hidden}
+.wcover img{width:100%;height:100%;object-fit:cover}
+.wcover svg{width:54px;height:54px;opacity:.8}
+.wbody{padding:12px 14px 14px;display:flex;flex-direction:column;gap:8px;flex:1}
+.wbody h3{font-size:19px;overflow-wrap:anywhere}
+.badge-score{position:absolute;right:8px;top:8px;background:var(--lcd-bg);color:var(--lcd-ink);font:600 15px "IBM Plex Mono",monospace;padding:3px 9px;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.badge-score small{color:var(--lcd-dim);font-size:10px;margin-left:2px}
+.dots{display:flex;gap:4px}
+.dot{width:14px;height:14px;border-radius:3px;border:1px solid var(--line);background:var(--surface);font:600 8.5px/12px "IBM Plex Mono",monospace;text-align:center;color:var(--ink2)}
+.dot.on{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.crit{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;padding:14px 0;border-top:1px solid var(--line)}
+.crit:first-child{border-top:0}
+.crit-n{font:600 12px "IBM Plex Mono",monospace;background:var(--ink);color:var(--surface);border-radius:4px;padding:2px 7px;height:fit-content;white-space:nowrap}
+.crit-t{font-weight:600;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.crit-t small{font:500 12px "IBM Plex Mono",monospace;color:var(--ink2)}
+.crit-b{grid-column:2;display:grid;gap:8px}
+.crit-b p{white-space:pre-wrap;overflow-wrap:anywhere}
+.lbl{font:600 11.5px "IBM Plex Sans",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);margin-bottom:2px}
+.att{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.att-i{border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--surface2);position:relative;min-height:88px;display:flex;flex-direction:column}
+.att-i img{width:100%;height:96px;object-fit:cover;cursor:zoom-in}
+.att-i .nm{font-size:12px;padding:6px 8px;overflow-wrap:anywhere;color:var(--ink2)}
+.att-i button.x{position:absolute;right:4px;top:4px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(0,0,0,.65);color:#fff;cursor:pointer;display:grid;place-items:center}
+.att-i .fileic{display:grid;place-items:center;height:60px;color:var(--brand)}
+.att-i .fileic svg{width:28px;height:28px}
+.drop{border:1.5px dashed var(--line);border-radius:8px;padding:16px;text-align:center;color:var(--ink2);cursor:pointer;background:var(--surface)}
+.drop:hover,.drop.on{border-color:var(--brand);background:var(--brand-soft)}
+.tbl-w{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table.tbl{border-collapse:collapse;width:100%;font-size:14px}
+.tbl th{font:600 11.5px "IBM Plex Sans",sans-serif;letter-spacing:.05em;text-transform:uppercase;color:var(--ink2);text-align:left;padding:9px 12px;background:var(--surface2);white-space:nowrap}
+.tbl td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:middle}
+.tbl td.n,.tbl th.n{text-align:right}
+.bar{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden;min-width:70px}
+.bar>i{display:block;height:100%;background:var(--brand);border-radius:4px}
+.bar.read>i{background:var(--read)}
+.award{font-weight:600;font-size:12.5px;padding:2px 9px;border-radius:4px;border:1px solid currentColor;white-space:nowrap}
+.award.a1{color:var(--gold)}.award.a2{color:var(--silver)}.award.a3{color:var(--bronze)}.award.a4{color:var(--brand)}.award.a0{color:var(--ink2);border-style:dashed}
+.tile{padding:14px 16px}
+.tile .v{font:600 30px/1.1 "IBM Plex Mono",monospace;color:var(--read)}
+.tile .l{font-size:13px;color:var(--ink2);margin-top:4px}
+.jury{display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:center}
+.jury input{width:72px;text-align:right}
+
+/* ---------- lab ---------- */
+.scalebox{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px;overflow-x:auto}
+.scalebox svg{margin:auto;max-width:100%}
+.sv-t{stroke:var(--ink);stroke-width:1.4;stroke-linecap:butt}
+.sv-tx{fill:var(--ink);font:600 12px "IBM Plex Mono",monospace}
+.sv-body{fill:var(--surface2);stroke:var(--ink2);stroke-width:1.2}
+.sv-liq{fill:var(--read)}
+.sv-glass{fill:var(--surface2);stroke:var(--ink2);stroke-width:1.4}
+.sv-cur{stroke:var(--read);stroke-width:1.6;stroke-dasharray:4 3}
+.sv-obj{fill:var(--brand);opacity:.85}
+.sv-jaw{fill:var(--surface2);stroke:var(--ink);stroke-width:1.3}
+.sv-hi{fill:var(--read);opacity:.25}
+.qrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:10px;margin-top:12px}
+.res{font:500 15px "IBM Plex Mono",monospace;background:var(--lcd-bg);color:var(--lcd-ink);padding:10px 12px;border-radius:6px;overflow-wrap:anywhere}
+.fb{padding:10px 12px;border-radius:6px;margin-top:12px;font-size:14px;border:1px solid var(--line);background:var(--surface)}
+.fb.ok{border-color:var(--good);background:color-mix(in srgb,var(--good) 12%,var(--surface))}
+.fb.no{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--surface))}
+.formula{font:500 15px "IBM Plex Mono",monospace;background:var(--surface2);padding:8px 10px;border-radius:6px;display:inline-block;margin-top:8px}
+
+/* ---------- toast ---------- */
+#toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:100;display:grid;gap:8px;width:min(92vw,440px);pointer-events:none}
+.tst{background:var(--ink);color:var(--surface);padding:10px 14px;border-radius:8px;box-shadow:var(--shadow);font-size:14px;pointer-events:auto}
+.tst.bad{background:var(--bad);color:#fff}
+.tst.good{background:var(--good);color:#fff}
+.skel{height:130px;border-radius:8px;background:linear-gradient(90deg,var(--surface2),var(--surface),var(--surface2));background-size:200% 100%;animation:sh 1.4s linear infinite}
+@keyframes sh{to{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+footer.ft{border-top:1px solid var(--line);padding-block:18px;color:var(--ink2);font-size:13px;background:var(--surface)}
+</style>
+<style>
+.acct{display:flex;align-items:center;gap:6px;min-width:0}
+.acct .who{display:inline-flex;align-items:center;gap:6px;max-width:190px;font:600 13px "IBM Plex Sans",sans-serif;color:var(--ink)}
+.acct .who b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.acct .who .ic{flex:none}
+.acct .chip{flex:none}
+.note.act{display:flex;gap:10px 14px;flex-wrap:wrap;align-items:center}
+.note.act>span{flex:1 1 260px}
+.chk{display:flex;gap:8px;align-items:center;font-weight:600;margin:4px 0 12px;cursor:pointer}
+.chk input{width:18px;height:18px}
+@media (max-width:640px){
+  .acct .who b,.acct .chip,.acct .lbl{display:none}
+  .acct .btn.sm{padding-inline:9px}
+  .ctl{gap:6px}
+}
+@media (max-width:640px){ .acct .who{display:none} }
+@media (max-width:430px){ .brand b{font-size:16px} .brand{gap:8px} .top-in{gap:8px 8px} }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <!-- instrument icons, 48x48 -->
+  <symbol id="d-caliper" viewBox="0 0 48 48"><rect x="4" y="24" width="40" height="8" rx="1"/><path d="M9 24V7h6v17M24 24V7h6v17"/><path d="M11 32v4M17 32v3M23 32v4M29 32v3M35 32v4M41 32v3"/></symbol>
+  <symbol id="d-scales" viewBox="0 0 48 48"><path d="M24 8v30M13 40h22M8 14h32"/><path d="M8 14 3 27h10zM40 14l-5 13h10z"/><circle cx="24" cy="8" r="2"/></symbol>
+  <symbol id="d-micro" viewBox="0 0 48 48"><path d="M12 40V19a9 9 0 0 1 9-9h14"/><path d="M12 30h9M21 30h9"/><rect x="30" y="24" width="10" height="12" rx="2"/><path d="M40 28h4v4h-4M34 24v12M37 24v12"/></symbol>
+  <symbol id="d-thermo" viewBox="0 0 48 48"><path d="M19 29V9a5 5 0 0 1 10 0v20a9 9 0 1 1-10 0z"/><path d="M24 34V16" stroke-width="3.4"/><circle cx="24" cy="36" r="3.2" fill="currentColor" stroke="none"/><path d="M33 12h5M33 18h4M33 24h5"/></symbol>
+  <symbol id="d-cyl" viewBox="0 0 48 48"><path d="M13 6h22M16 6v33a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4V6"/><path d="M16 14h6M16 20h4M16 26h6M16 32h4"/><path d="M16.8 25h14.4v14a3 3 0 0 1-3 3h-8.4a3 3 0 0 1-3-3z" fill="currentColor" stroke="none" opacity=".28"/></symbol>
+  <symbol id="d-dyno" viewBox="0 0 48 48"><circle cx="24" cy="7" r="3"/><path d="M24 10v4l-7 3 14 4-14 4 14 4-7 3v4"/><path d="M24 36v2a3 3 0 1 1-3 3"/><rect x="14" y="14" width="20" height="22" rx="3" opacity=".35"/></symbol>
+  <symbol id="d-areo" viewBox="0 0 48 48"><path d="M20 4h8v22a4 4 0 0 1-8 0z"/><path d="M20 9h4M20 14h4M20 19h4"/><path d="M8 24h32v14a5 5 0 0 1-5 5H13a5 5 0 0 1-5-5z"/><path d="M8 31h32" opacity=".5"/><path d="M20 26v16" opacity="0"/></symbol>
+  <symbol id="d-psy" viewBox="0 0 48 48"><path d="M13 30V9a3.5 3.5 0 0 1 7 0v21a6.5 6.5 0 1 1-7 0zM29 30V9a3.5 3.5 0 0 1 7 0v21a6.5 6.5 0 1 1-7 0z"/><path d="M16.5 34V16M32.5 34V22" stroke-width="3"/><path d="M40 8c2 3 3 4.5 3 6.5a3 3 0 0 1-6 0c0-2 1-3.500 3-6.500z" fill="currentColor" stroke="none" opacity=".5"/></symbol>
+  <symbol id="d-gauge" viewBox="0 0 48 48"><circle cx="24" cy="24" r="19"/><path d="M10 31a14 14 0 0 1 28 0"/><path d="M24 30l8-11" stroke-width="3"/><circle cx="24" cy="30" r="2.4" fill="currentColor" stroke="none"/><path d="M13 17l2 2M24 11v3M35 17l-2 2"/></symbol>
+  <symbol id="d-mano" viewBox="0 0 48 48"><circle cx="24" cy="21" r="16"/><path d="M12 27a12 12 0 0 1 24 0"/><path d="M24 26l-6-10" stroke-width="3"/><circle cx="24" cy="26" r="2.2" fill="currentColor" stroke="none"/><path d="M20 37h8v7h-8zM17 44h14"/></symbol>
+  <symbol id="d-multi" viewBox="0 0 48 48"><rect x="11" y="3" width="26" height="42" rx="4"/><rect x="15" y="8" width="18" height="10" rx="1.5"/><circle cx="24" cy="30" r="6"/><path d="M24 30l3-3.500"/><path d="M16 40h2M23 40h2M30 40h2"/></symbol>
+  <symbol id="d-calor" viewBox="0 0 48 48"><path d="M9 18h30v20a5 5 0 0 1-5 5H14a5 5 0 0 1-5-5z"/><path d="M6 18h36"/><path d="M31 5v13M17 8v10"/><path d="M14 27h20" opacity=".5"/><circle cx="31" cy="5" r="1.500" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="d-hyg" viewBox="0 0 48 48"><path d="M11 12h26v28a4 4 0 0 1-4 4H15a4 4 0 0 1-4-4z"/><path d="M17 6h14"/><path d="M24 12v20"/><path d="M19 32h10l-2 6h-6z" fill="currentColor" stroke="none" opacity=".35"/><path d="M15 20h4M15 26h4"/></symbol>
+  <symbol id="d-cond" viewBox="0 0 48 48"><path d="M6 22h26l-2 20H8z"/><path d="M14 8v26M24 8v26"/><path d="M14 8H9M24 8h16v6"/><circle cx="40" cy="20" r="5"/><path d="M6 32h26" opacity=".5"/></symbol>
+  <!-- UI icons, 24x24 -->
+  <symbol id="u-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.500 1.500M17.500 17.500 19 19M5 19l1.500-1.500M17.500 6.500 19 5"/></symbol>
+  <symbol id="u-moon" viewBox="0 0 24 24"><path d="M20 14.500A8 8 0 0 1 9.500 4 8 8 0 1 0 20 14.500z"/></symbol>
+  <symbol id="u-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="u-up" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></symbol>
+  <symbol id="u-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></symbol>
+  <symbol id="u-edit" viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/></symbol>
+  <symbol id="u-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.500 0l3-3a4 4 0 0 0-5.500-5.500l-1 1M14 10a4 4 0 0 0-5.500 0l-3 3A4 4 0 0 0 11 18.500l1-1"/></symbol>
+  <symbol id="u-file" viewBox="0 0 24 24"><path d="M6 3h8l5 5v13H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/></symbol>
+  <symbol id="u-dl" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M4 20h16"/></symbol>
+  <symbol id="u-eyeoff" viewBox="0 0 24 24"><path d="M3 3l18 18M10.500 6.200A9 9 0 0 1 12 6c5 0 8.500 4 9.500 6a14 14 0 0 1-3 3.700M6.300 7.500A14 14 0 0 0 2.500 12c1 2 4.500 6 9.500 6a9 9 0 0 0 3.500-.7M9.900 10A3 3 0 0 0 14 14"/></symbol>
+  <symbol id="u-eye" viewBox="0 0 24 24"><path d="M2.500 12C3.500 10 7 6 12 6s8.500 4 9.500 6c-1 2-4.500 6-9.500 6s-8.500-4-9.500-6z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="u-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="u-check" viewBox="0 0 24 24"><path d="M5 12.500l4.500 4.500L19 7"/></symbol>
+  <symbol id="u-ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6"/></symbol>
+  <symbol id="u-img" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.800"/><path d="M4 18l5-5 4 4 3-3 4 4"/></symbol>
+  <symbol id="u-warn" viewBox="0 0 24 24"><path d="M12 3 2 20h20z"/><path d="M12 10v5M12 17.500v.5"/></symbol>
+  <symbol id="u-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+  <symbol id="u-out" viewBox="0 0 24 24"><path d="M10 4H5v16h5M15 8l4 4-4 4M19 12H9"/></symbol>
+  <symbol id="u-lab" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6L4.500 19a1.500 1.500 0 0 0 1.300 2.200h12.400A1.500 1.500 0 0 0 19.500 19L14 9V3"/><path d="M7.500 15h9"/></symbol>
+</svg>
+
+<header class="top" id="top"></header>
+<main class="wrap" id="app" tabindex="-1"></main>
+<footer class="ft"><div class="wrap" id="foot"></div></footer>
+<dialog id="dlg" aria-labelledby="dlgT"></dialog>
+<dialog id="lb" class="lb" aria-label="Image"></dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="config.js"></script>
+<script>
+(function(){ 'use strict';
+/* ============================================================
+   DATA: instruments, DIY, safety, ЗЕРДЕ criteria  ([ru, kk] pairs)
+   ============================================================ */
+const G = 'https://drive.google.com/file/d/';
+const EF = 'https://efizika.ru/html5/';
+const INSTRUMENTS = [
+  { id:'caliper', icon:'caliper', cat:'mech', train:'vern',
+    name:['Линейка / штангенциркуль','Сызғыш / штангенциркуль'],
+    measures:['Длина и линейные размеры','Ұзындық және сызықтық өлшемдер'],
+    units:['мм, см, м','мм, см, м'],
+    desc:['Измерение длины и линейных размеров. Штангенциркуль позволяет измерять внутренние и внешние диаметры.','Ұзындықты және сызықтық өлшемдерді өлшеу. Штангенциркуль ішкі және сыртқы диаметрлерді өлшеуге мүмкіндік береді.'],
+    typical:['линейка — 1 мм; штангенциркуль с нониусом — 0,1…0,02 мм','сызғыш — 1 мм; нониусты штангенциркуль — 0,1…0,02 мм'],
+    how:[['Смотри на шкалу строго перпендикулярно — так исчезает ошибка параллакса.','Шкалаға қатаң перпендикуляр қара — сонда параллакс қателігі жойылады.'],
+         ['Штангенциркуль: зажми тело губками, целые миллиметры читай по нулю нониуса.','Штангенциркуль: денені қысқыштармен қыс, бүтін миллиметрді нониустың нөлі бойынша оқы.'],
+         ['Десятые доли мм — по штриху нониуса, совпавшему со штрихом основной шкалы.','Миллиметрдің ондық үлесін — нониустың негізгі шкаланың штрихымен беттескен штрихы бойынша оқы.']],
+    safe:['Губки штангенциркуля острые — держи инструмент осторожно.','Штангенциркульдің қысқыштары өткір — құралды абайлап ұста.'],
+    links:[{k:'sim',u:'https://www.vascak.cz/data/android/physicsatschool/template.php?f=mech_posuvka&l=ru'}] },
+  { id:'scales', icon:'scales', cat:'mech',
+    name:['Весы','Таразы'],
+    measures:['Масса тела','Дене массасы'],
+    units:['г, кг','г, кг'],
+    desc:['Рычажные или электронные. Прибор для определения массы тела по действующей на него силе тяжести.','Тұтқалы немесе электронды. Дене массасын оған әсер ететін ауырлық күші бойынша анықтауға арналған құрал.'],
+    typical:['электронные — 0,1…0,01 г; рычажные — по набору гирь','электронды — 0,1…0,01 г; тұтқалы — таразы тастарының жиынтығына байланысты'],
+    how:[['Поставь весы на ровную поверхность; электронные — включи и обнули («тара»).','Таразыны тегіс бетке қой; электрондысын қосып, нөлге келтір («тара»).'],
+         ['Тело — на левую чашку, гири — на правую; добавляй от больших к малым.','Денені сол жақ табаққа, таразы тастарын оң жақ табаққа қой; үлкенінен кішісіне қарай қос.'],
+         ['При равновесии масса тела равна сумме масс гирь (у электронных — показание дисплея).','Тепе-теңдікте дене массасы таразы тастары массаларының қосындысына тең (электрондыда — дисплейдің көрсетілімі).']],
+    safe:['Не превышай предельную нагрузку весов.','Таразының шекті жүктемесінен аспа.'],
+    links:[{k:'sim',u:EF+'181/index.html'}] },
+  { id:'micrometer', icon:'micro', cat:'mech',
+    name:['Микрометр','Микрометр'],
+    measures:['Размеры малых деталей','Ұсақ детальдардың өлшемдері'],
+    units:['мм','мм'],
+    desc:['Микрометр — прибор для высокоточного определения линейных размеров деталей.','Микрометр — детальдардың сызықтық өлшемдерін жоғары дәлдікпен анықтауға арналған құрал.'],
+    typical:['0,01 мм','0,01 мм'],
+    how:[['Зажимай деталь только трещоткой — так усилие всегда одинаково.','Детальді тек трещоткамен қыс — сонда күш әрқашан бірдей болады.'],
+         ['Целые и половинки миллиметров читай на стебле (основная шкала).','Бүтін және жарты миллиметрді сабақтан (негізгі шкала) оқы.'],
+         ['Прибавь сотые доли миллиметра по шкале барабана.','Миллиметрдің жүздік үлесін барабан шкаласы бойынша қос.']],
+    safe:['Не закручивай барабан до упора без детали.','Детальсіз барабанды соңына дейін бұрама.'],
+    links:[{k:'sim',u:'https://www.vascak.cz/data/android/physicsatschool/template.php?f=mech_mikrometr&l=ru'}] },
+  { id:'thermo', icon:'thermo', cat:'heat', train:'thermo',
+    name:['Термометр','Термометр'],
+    measures:['Температура','Температура'],
+    units:['°C','°C'],
+    desc:['Измерение температуры; основан на тепловом расширении жидкостей или изменении сопротивления.','Температураны өлшеу; сұйықтардың жылулық ұлғаюына немесе кедергінің өзгеруіне негізделген.'],
+    typical:['лабораторный — 1 °C; медицинский — 0,1…0,2 °C','зертханалық — 1 °C; медициналық — 0,1…0,2 °C'],
+    how:[['Дождись, пока столбик перестанет двигаться.','Бағана қозғалысын тоқтатқанша күт.'],
+         ['Не касайся резервуаром стенок и дна сосуда.','Резервуармен ыдыстың қабырғасы мен түбіне тиме.'],
+         ['Глаз — на уровне верхнего края столбика жидкости.','Көз — сұйық бағанасының жоғарғы шетімен бір деңгейде болсын.']],
+    safe:['Стеклянный термометр хрупкий: не роняй; при поломке сразу позови учителя.','Шыны термометр сынғыш: құлатпа; сынса, бірден мұғалімді шақыр.'],
+    links:[{k:'sim',u:EF+'55/index.html'}] },
+  { id:'cyl', icon:'cyl', cat:'mech', train:'cyl',
+    name:['Мензурка','Мензурка'],
+    measures:['Объём жидкостей и тел (по вытеснению)','Сұйықтар мен денелердің көлемі (ығыстыру арқылы)'],
+    units:['мл (см³)','мл (см³)'],
+    desc:['Стеклянный сосуд с делениями для точного определения объёма жидкостей в лабораториях.','Зертханаларда сұйықтардың көлемін дәл анықтауға арналған бөліктері бар шыны ыдыс.'],
+    typical:['1…10 мл — зависит от размера мензурки','1…10 мл — мензурканың өлшеміне байланысты'],
+    how:[['Поставь мензурку на ровный стол.','Мензурканы тегіс үстелге қой.'],
+         ['Глаз — на уровне поверхности; воду читай по нижней точке мениска.','Көз — сұйық бетімен бір деңгейде; суды менискінің төменгі нүктесі бойынша оқы.'],
+         ['Объём тела: V = V₂ − V₁ (уровень после погружения минус до погружения).','Дене көлемі: V = V₂ − V₁ (батырғаннан кейінгі деңгей минус батырғанға дейінгі деңгей).']],
+    safe:['Стекло: наливай аккуратно, не ставь у края стола.','Шыны: абайлап құй, үстел шетіне қойма.'],
+    links:[{k:'sim',u:EF+'62/index.html'}] },
+  { id:'dyno', icon:'dyno', cat:'mech',
+    name:['Динамометр','Динамометр'],
+    measures:['Сила (вес, сила упругости, трения)','Күш (салмақ, серпімділік күші, үйкеліс күші)'],
+    units:['Н','Н'],
+    desc:['Силомер: измеряет силу по деформации (растяжению) пружины.','Күш өлшегіш: күшті серіппенің деформациясы (созылуы) бойынша өлшейді.'],
+    typical:['обычно 0,1…0,5 Н — смотри шкалу','әдетте 0,1…0,5 Н — шкаланы қара'],
+    how:[['Проверь «ноль» без нагрузки; при необходимости поправь указатель.','Жүксіз «нөлді» тексер; қажет болса, көрсеткішті түзе.'],
+         ['Направь ось пружины вдоль измеряемой силы.','Серіппенің осін өлшенетін күш бағытымен бағыттас ұста.'],
+         ['Не превышай предел шкалы — пружина деформируется навсегда.','Шкала шегінен аспа — серіппе біржола деформацияланады.']],
+    safe:['Крепи грузы надёжно, чтобы они не упали на ноги.','Жүктерді берік бекіт, аяққа құламасын.'],
+    links:[{k:'sim',u:EF+'68/index.html'}] },
+  { id:'areo', icon:'areo', cat:'mech',
+    name:['Ареометр','Ареометр'],
+    measures:['Плотность жидкости','Сұйықтың тығыздығы'],
+    units:['г/см³, кг/м³','г/см³, кг/м³'],
+    desc:['Измеритель плотности жидкостей, работа которого основана на законе Архимеда.','Жұмысы Архимед заңына негізделген сұйықтардың тығыздығын өлшегіш.'],
+    typical:['≈ 0,001…0,01 г/см³ — по шкале','≈ 0,001…0,01 г/см³ — шкала бойынша'],
+    how:[['Налей жидкость в высокий цилиндр.','Биік цилиндрге сұйықты құй.'],
+         ['Опусти ареометр так, чтобы он плавал свободно и не касался стенок.','Ареометрді еркін жүзетіндей және қабырғаға тимейтіндей етіп батыр.'],
+         ['Читай значение по шкале на уровне поверхности: чем плотнее жидкость, тем меньше он погружается.','Мәнді сұйық бетінің деңгейіндегі шкала бойынша оқы: сұйық тығыз болған сайын, ол аз батады.']],
+    safe:['Стеклянный поплавок хрупкий — опускай медленно.','Шыны қалқыма сынғыш — баяу батыр.'],
+    links:[{k:'video',u:'https://youtu.be/DuwzHG7EGc8?si=tpZ-youM5MIX1qxR'}] },
+  { id:'psy', icon:'psy', cat:'heat',
+    name:['Психрометр / гигрометр','Психрометр / гигрометр'],
+    measures:['Влажность воздуха','Ауа ылғалдылығы'],
+    units:['%','%'],
+    desc:['Определение влажности воздуха через разность показаний «сухого» и «влажного» термометров.','Ауа ылғалдылығын «құрғақ» және «дымқыл» термометрлер көрсетілімдерінің айырмасы арқылы анықтау.'],
+    typical:['термометры 0,2…1 °C; влажность — по психрометрической таблице','термометрлер 0,2…1 °C; ылғалдылық — психрометрлік кесте бойынша'],
+    how:[['Запиши показание сухого термометра t₁.','Құрғақ термометрдің көрсетілімін t₁ жаз.'],
+         ['Запиши показание влажного термометра t₂ (его резервуар обёрнут влажной тканью).','Дымқыл термометрдің көрсетілімін t₂ жаз (оның резервуары дымқыл матамен оралған).'],
+         ['Найди разность t₁ − t₂ и по психрометрической таблице определи относительную влажность.','t₁ − t₂ айырмасын тауып, психрометрлік кесте бойынша салыстырмалы ылғалдылықты анықта.']],
+    safe:['Стеклянные термометры хрупкие — работай аккуратно.','Шыны термометрлер сынғыш — абайлап жұмыс істе.'],
+    links:[{k:'sim',u:EF+'28/index.html'}] },
+  { id:'ammeter', icon:'gauge', cat:'elec',
+    name:['Амперметр / вольтметр','Амперметр / вольтметр'],
+    measures:['Сила тока (А) и напряжение (В)','Ток күші (А) және кернеу (В)'],
+    units:['А, В','А, В'],
+    desc:['Электроизмерительные приборы для фиксации силы тока (А) и напряжения (В).','Ток күшін (А) және кернеуді (В) тіркейтін электр өлшеу құралдары.'],
+    typical:['школьные — обычно 0,1 А и 0,2 В; смотри шкалу','мектептік — әдетте 0,1 А және 0,2 В; шкаланы қара'],
+    how:[['Амперметр включай в цепь последовательно, вольтметр — параллельно участку.','Амперметрді тізбекке тізбектей, вольтметрді учаскеге параллель қос.'],
+         ['Соблюдай полярность: «+» прибора — к плюсу источника.','Полярлықты сақта: құралдың «+» — көздің плюсіне.'],
+         ['Выбирай предел измерения с запасом; цепь включай только после проверки учителем.','Өлшеу шегін қормен таңда; тізбекті мұғалім тексергеннен кейін ғана қос.']],
+    safe:['Собирай цепь при отключённом источнике; используй только школьные источники тока.','Тізбекті көз өшірулі кезде жина; тек мектептік ток көздерін қолдан.'],
+    links:[{k:'sim',u:EF+'51/index.html'},{k:'doc',u:G+'1wfbDsJ3GklTd1sGoRmM7ihmI4mJZi212/view?usp=sharing'}] },
+  { id:'mano', icon:'mano', cat:'mech',
+    name:['Манометр / барометр','Манометр / барометр'],
+    measures:['Давление: атмосферное и в закрытых системах','Қысым: атмосфералық және тұйық жүйелердегі'],
+    units:['Па, кПа, мм рт. ст.','Па, кПа, мм сын. бағ.'],
+    desc:['Приборы для измерения давления: атмосферного (барометр) или внутри закрытых систем (манометр).','Қысымды өлшеуге арналған құралдар: атмосфералық (барометр) немесе тұйық жүйелердің ішіндегі (манометр).'],
+    typical:['барометр-анероид — ≈ 1 мм рт. ст.; смотри шкалу','барометр-анероид — ≈ 1 мм сын. бағ.; шкаланы қара'],
+    how:[['Барометр-анероид клади горизонтально и слегка постучи по корпусу — стрелка «устоится».','Барометр-анероидты көлденең қой да, корпусын сәл түрт — тіл орнығады.'],
+         ['Манометр присоединяй к системе так, чтобы не превысить предел шкалы.','Манометрді жүйеге шкала шегінен аспайтындай етіп қос.'],
+         ['Переводи единицы: 1 мм рт. ст. ≈ 133 Па.','Бірліктерді ауыстыр: 1 мм сын. бағ. ≈ 133 Па.']],
+    safe:['Не подключай к системам под высоким давлением без учителя.','Мұғалімсіз жоғары қысымды жүйелерге қосба.'],
+    links:[{k:'video',u:'https://youtu.be/5jQfH9t8xXk?si=5nfmfXWocmh3dPov'}] },
+  { id:'multi', icon:'multi', cat:'elec',
+    name:['Мультиметр','Мультиметр'],
+    measures:['Напряжение, ток, сопротивление и др.','Кернеу, ток, кедергі және т.б.'],
+    units:['В, А, Ом','В, А, Ом'],
+    desc:['Универсальный цифровой прибор: как работать с мультиметром — интерфейс, режимы, диагностика, применение.','Әмбебап цифрлы құрал: мультиметрмен қалай жұмыс істеу керек — интерфейс, режимдер, диагностика, қолдану.'],
+    typical:['цифровой — по последнему разряду дисплея','цифрлы — дисплейдің соңғы разряды бойынша'],
+    how:[['Сначала выбери режим (V, A или Ω) и предел, потом подключай щупы.','Алдымен режимді (V, A немесе Ω) және шекті таңда, содан кейін щуптарды қос.'],
+         ['Щупы: чёрный — в гнездо COM, красный — в гнездо нужной величины.','Щуптар: қара — COM ұяшығына, қызыл — қажетті шамаға арналған ұяшыққа.'],
+         ['Ток измеряй последовательно, напряжение — параллельно; сопротивление — только на обесточенном участке.','Токты тізбектей, кернеуді параллель өлше; кедергіні тек тоғы жоқ учаскеде өлше.']],
+    safe:['Не измеряй напряжение сети 220 В.','220 В желі кернеуін өлшеме.'],
+    links:[{k:'doc',u:G+'1xHdG_mmrMuIWfwEiXY_7neeSW-jCdQam/view?usp=sharing'}] },
+  { id:'calor', icon:'calor', cat:'heat',
+    name:['Калориметр','Калориметр'],
+    measures:['Количество теплоты','Жылу мөлшері'],
+    units:['Дж','Дж'],
+    desc:['Прибор для измерения количества теплоты, выделяющейся или поглощающейся в каком-либо физическом, химическом или биологическом процессе.','Қандай да бір физикалық, химиялық немесе биологиялық процесте бөлінетін немесе жұтылатын жылу мөлшерін өлшеуге арналған құрал.'],
+    typical:['по термометру внутри — обычно 0,5…1 °C','ішіндегі термометр бойынша — әдетте 0,5…1 °C'],
+    how:[['Налей воду известной массы, измерь её начальную температуру.','Массасы белгілі су құй, оның бастапқы температурасын өлше.'],
+         ['Опусти тело или добавь вещество, перемешивай и дождись выравнивания температур.','Денені түсір немесе зат қос, араластыр да, температура теңескенше күт.'],
+         ['Найди Q = c·m·Δt и учти: часть тепла уходит в окружающую среду.','Q = c·m·Δt табыңыз және жылудың бір бөлігі қоршаған ортаға кететінін ескер.']],
+    safe:['Горячая вода: работай с прихватками, не наклоняйся над сосудом.','Ыстық су: қолғаппен жұмыс істе, ыдыстың үстіне еңкейме.'],
+    links:[{k:'doc',u:G+'1Pph6ZjTkAXTjVpd8OQveg0iVVUZvQ3Eg/view?usp=sharing'}] }
+];
+
+const DIY = [
+  { id:'diy-hyg', icon:'hyg', name:['Гигрометр из салфетки или волоса','Майлықтан немесе шаштан жасалған гигрометр'],
+    desc:['Измерение влажности через деформацию материалов при поглощении паров воды.','Су буын сіңіргенде материалдардың деформациясы арқылы ылғалдылықты өлшеу.'],
+    u:G+'1Ytor_0ajY7YfKZ8uuTFfpytWVWi2LBWV/view?usp=sharing' },
+  { id:'diy-psy', icon:'psy', name:['Психрометр из двух термометров','Екі термометрден жасалған психрометр'],
+    desc:['Определение влажности по разности температур сухого и увлажнённого датчиков.','Құрғақ және дымқылданған датчиктердің температура айырмасы бойынша ылғалдылықты анықтау.'],
+    u:G+'1sFyR3jOcFh2iZ6sQdPjT-msJ_AySJRz3/view?usp=sharing' },
+  { id:'diy-areo', icon:'areo', name:['Самодельный ареометр','Өзі жасаған ареометр'],
+    desc:['Поплавок с грузом для измерения плотности жидкостей на основе закона Архимеда.','Архимед заңы негізінде сұйықтардың тығыздығын өлшеуге арналған жүгі бар қалқыма.'],
+    u:G+'1Y_YnluNry9D0_FbStVmn5rX-jt4iLmjL/view?usp=sharing' },
+  { id:'diy-level', icon:'cond', name:['Электрический измеритель уровня','Электрлік деңгей өлшегіш'],
+    desc:['Датчик, определяющий количество жидкости через изменение сопротивления в цепи.','Тізбектегі кедергінің өзгеруі арқылы сұйық мөлшерін анықтайтын датчик.'],
+    u:G+'1nEMeZYGlkRXyuDdlVAjD_l3mon3ivsu0/view?usp=sharing' },
+  { id:'diy-cond', icon:'cond', name:['Кондуктометр (анализатор чистоты)','Кондуктометр (тазалық анализаторы)'],
+    desc:['Прибор для проверки состава воды по её способности проводить электрический ток.','Судың құрамын оның электр тогын өткізу қабілеті бойынша тексеруге арналған құрал.'],
+    u:G+'1IH78KYCfVohgkZUATowEyHQV211HhaL_/view?usp=sharing' }
+];
+
+const RES_LINKS = {
+  test:'https://docs.google.com/forms/d/e/1FAIpQLScCNeZbXO0BtTYdyXkiLFlHxhI7jYi59Qsvwx0hwvTcnY9aYQ/viewform?usp=sharing',
+  video:G+'1G-t-CWCI1VQU7GgVVXdcYvdneCqR0ZjR/view?usp=sharing',
+  bot:'https://gemini.google.com/gem/1tCROUDemr9upiEH808M8kSpAq8czhwje?usp=sharing',
+  theory:G+'14k0P9Svvj1GJTqENZs7RfKyYT4-a-r35/view?usp=sharing',
+  safety:G+'1vGh937NJY9MFrNW-guy_FuKicjydjP-J/view?usp=sharing'
+};
+
+const SAFETY = [
+  ['Начинай работу только с разрешения учителя и после инструктажа.','Жұмысты тек мұғалімнің рұқсатымен және нұсқаулықтан кейін баста.'],
+  ['Проверь приборы и провода: трещины, оголённые провода, разбитое стекло — сразу сообщи учителю.','Құралдар мен сымдарды тексер: жарықтар, жалаңаш сымдар, сынған шыны — бірден мұғалімге хабарла.'],
+  ['Электрические цепи собирай при отключённом источнике, включай только после проверки учителем; используй лишь школьные источники тока.','Электр тізбегін көз өшірулі кезде жина, мұғалім тексергеннен кейін ғана қос; тек мектептік ток көздерін қолдан.'],
+  ['Не трогай электроприборы мокрыми руками; никогда не подключай самоделки к розетке 220 В.','Электр құралдарына дымқыл қолмен тиме; өзі жасаған құралдарды ешқашан 220 В розеткаға қосба.'],
+  ['Со стеклом (термометры, мензурки, ареометры) обращайся осторожно. Разбился термометр — не собирай осколки сам, позови учителя.','Шынымен (термометр, мензурка, ареометр) абайлап жұмыс істе. Термометр сынса — сынықтарды өзің жинама, мұғалімді шақыр.'],
+  ['С горячей водой и калориметром работай с прихватками, не наклоняйся над сосудом.','Ыстық сумен және калориметрмен қолғаппен жұмыс істе, ыдыстың үстіне еңкейме.'],
+  ['Не пробуй вещества на вкус и не нюхай их близко; после работы вымой руки.','Заттарды дәмін татпа және жақыннан иіскеме; жұмыстан кейін қолыңды жу.'],
+  ['Самоделки дома делай вместе со взрослыми: только безопасные материалы и батарейки.','Үйде өзі жасаған құралдарды ересектермен бірге жаса: тек қауіпсіз материалдар мен батареялар.'],
+  ['После работы отключи приборы, убери рабочее место, верни оборудование.','Жұмыстан кейін құралдарды өшір, жұмыс орнын жина, жабдықты қайтар.']
+];
+
+/* ЗЕРДЕ criteria: max points, name, what is included — as in the official table */
+const CRIT = [
+  { max:10, name:['Проблема, вопрос и актуальность','Мәселе, сұрақ және өзектілік'],
+    inc:['Чёткая постановка проблемы и исследовательского вопроса; связь темы с жизнью, учебой или практической потребностью','Мәселе мен зерттеу сұрағының нақты қойылуы; тақырыптың өмірмен, оқумен немесе практикалық қажеттілікпен байланысы'] },
+  { max:10, name:['Цель, задачи, гипотеза и логика работы','Мақсат, міндеттер, болжам және жұмыс логикасы'],
+    inc:['Цель и задачи соответствуют вопросу исследования; этапы работы последовательны; гипотеза — при необходимости','Мақсат пен міндеттер зерттеу сұрағына сәйкес; жұмыс кезеңдері бірізді; болжам — қажет болса'] },
+  { max:15, name:['Методы, план работы, безопасность и этика','Әдістер, жұмыс жоспары, қауіпсіздік және этика'],
+    inc:['Подходящий возрасту метод исследования; план работы; корректное наблюдение / измерение / эксперимент; соблюдение безопасности и этики','Жасқа сай зерттеу әдісі; жұмыс жоспары; дұрыс бақылау / өлшеу / эксперимент; қауіпсіздік пен этиканы сақтау'] },
+  { max:20, name:['Данные, анализ и результаты','Деректер, талдау және нәтижелер'],
+    inc:['Собственные данные, наблюдения, анализ, модель или продукт; сравнение результатов; таблицы, диаграммы, фото, схемы','Жеке деректер, бақылаулар, талдау, модель немесе өнім; нәтижелерді салыстыру; кестелер, диаграммалар, фото, сызбалар'] },
+  { max:15, name:['Документирование, источники, академическая честность и открытость ИИ','Құжаттау, дереккөздер, академиялық адалдық және ЖИ-ді ашық көрсету'],
+    inc:['Дневник исследования; минимум 3 надёжных источника; правильные ссылки; честное указание внешней помощи и использования ИИ','Зерттеу күнделігі; кемінде 3 сенімді дереккөз; дұрыс сілтемелер; сырттан көмекті және ЖИ пайдаланғанын адал көрсету'] },
+  { max:10, name:['Выводы, практическая значимость, ограничения и рефлексия','Қорытынды, практикалық маңызы, шектеулер және рефлексия'],
+    inc:['Выводы подтверждены результатами; показано, где применить работу; указаны ограничения, дальнейшие шаги и чему научился автор','Қорытындылар нәтижелермен расталған; жұмысты қайда қолдануға болатыны көрсетілген; шектеулер, келесі қадамдар және автордың нені үйренгені көрсетілген'] },
+  { max:10, name:['Презентация и научная коммуникация','Таныстырылым және ғылыми коммуникация'],
+    inc:['Краткое, понятное и наглядное представление; научные понятия по возрасту; соблюдение времени','Қысқа, түсінікті және көрнекі баяндау; жасына сай ғылыми ұғымдар; регламентті сақтау'] },
+  { max:10, name:['Ответы на вопросы, понимание работы и индивидуальный вклад','Сұрақтарға жауаптар, жұмысты түсіну және жеке үлес'],
+    inc:['Точные ответы; понимание проблемы, методов и результатов — до 5 баллов; подтверждение личного вклада — до 5 баллов','Нақты жауаптар; мәселені, әдістер мен нәтижелерді түсіну — 5 балға дейін; жеке үлесті растау — 5 балға дейін'] }
+];
+const AWARDS = [
+  { id:1, min:90, name:['I степень','I дәреже'], range:'90–100' },
+  { id:2, min:80, name:['II степень','II дәреже'], range:'80–89,99' },
+  { id:3, min:70, name:['III степень','III дәреже'], range:'70–79,99' },
+  { id:4, min:60, name:['Грамота','Грамота'], range:'60–69,99' }
+];
+
+/* Trainer presets: labelled ticks every `every` divisions, division value d */
+const PRESETS = {
+  ruler:[ {min:0,max:60,every:10,d:1,u:'мм'}, {min:0,max:40,every:5,d:1,u:'мм'}, {min:0,max:100,every:5,d:2,u:'мм'} ],
+  thermo:[ {min:-10,max:40,every:10,d:1,u:'°C'}, {min:0,max:50,every:5,d:2,u:'°C'}, {min:34,max:42,every:5,d:0.2,u:'°C'}, {min:0,max:30,every:5,d:1,u:'°C'} ],
+  cyl:[ {min:0,max:100,every:5,d:2,u:'мл'}, {min:0,max:50,every:10,d:1,u:'мл'}, {min:0,max:250,every:5,d:5,u:'мл'} ]
+};
+const TRAIN_KINDS = ['ruler','thermo','cyl','vern'];
+/* ============================================================
+   UI STRINGS  key: [ru, kk]
+   ============================================================ */
+const UI = {
+  app:['Лаборатория измерений','Өлшеу зертханасы'],
+  app_sub:['Проект учащихся 7–8 классов · физика','7–8 сынып оқушыларының жобасы · физика'],
+  t_dev:['Приборы','Құралдар'], t_lab:['Практикум','Практикум'], t_works:['Работы','Жұмыстар'], t_res:['Итоги','Қорытынды'], t_about:['О проекте','Жоба туралы'],
+  theme_to_light:['Светлая тема','Ашық тема'], theme_to_dark:['Тёмная тема','Қараңғы тема'],
+  lang_lbl:['Язык','Тіл'],
+  hero_kick:['Физика · 7–8 класс','Физика · 7–8 сынып'],
+  hero_lead:['Изучай приборы, тренируйся считывать шкалы, проводи измерения и делись своими работами — всё сохраняется и доступно с любого устройства.','Құралдарды зертте, шкаланы оқуға жаттығып көр, өлшеулер жүргіз және жұмыстарыңмен бөліс — бәрі сақталады және кез келген құрылғыдан қолжетімді.'],
+  add_work:['Добавить работу','Жұмыс қосу'],
+  to_lab:['Открыть практикум','Практикумды ашу'],
+  st_dev:['приборов','құрал'], st_diy:['самоделок','өзі жасаған'], st_works:['работ','жұмыс'], st_scored:['оценено','бағаланған'],
+  lcd_title:['Лаборатория','Зертхана'],
+
+  what_is:['Что такое измерительный прибор?','Өлшеу құралы деген не?'],
+  what_is_txt:['Это устройство для получения значений физической величины в установленном диапазоне.','Бұл белгіленген диапазонда физикалық шаманың мәндерін алуға арналған құрылғы.'],
+  cat_all:['Все','Барлығы'], cat_mech:['Механика','Механика'], cat_heat:['Тепло','Жылу'], cat_elec:['Электричество','Электр'],
+  dev_h:['Каталог приборов','Құралдар каталогы'],
+  measures:['Что измеряет','Нені өлшейді'], units:['Единицы','Бірліктері'],
+  typical:['Типичная цена деления','Әдеттегі бөлік бағасы'],
+  typ_note:['Ориентир — определи цену деления по шкале своего прибора.','Бағдар — бөлік бағасын өз құралыңның шкаласы бойынша анықта.'],
+  how_to:['Как пользоваться','Қалай қолданылады'], safety_h:['Безопасность','Қауіпсіздік'],
+  materials:['Материалы','Материалдар'],
+  l_sim:['Симулятор','Симулятор'], l_video:['Видео','Бейне'], l_doc:['Материал','Материал'],
+  train_this:['Тренироваться','Жаттығу'], make_work:['Сделать работу об этом','Осы туралы жұмыс жасау'],
+  diy_h:['Сделай своими руками','Өз қолыңмен жаса'],
+  diy_p:['Самодельные приборы — идеи для проектов. Открой инструкцию и оформи свою работу.','Өзі жасаған құралдар — жобаға арналған идеялар. Нұсқаулықты аш та, өз жұмысыңды рәсімде.'],
+  open_guide:['Инструкция','Нұсқаулық'], make_project:['Сделать проект','Жоба жасау'],
+  safe_h:['Техника безопасности','Қауіпсіздік техникасы'],
+  safe_p:['Обязательный материал перед любым экспериментом.','Кез келген экспериментке дейін міндетті материал.'],
+  res_h:['Ресурсы проекта','Жоба ресурстары'],
+  res_test:['Тест','Тест'], res_video:['Видео','Бейне'], res_bot:['Помощник-бот','Көмекші-бот'], res_theory:['Теория','Теория'], res_safety:['Инструкция по ТБ','ҚТ нұсқаулығы'],
+  ext_note:['Откроется в новой вкладке.','Жаңа қойындыда ашылады.'],
+
+  lab_h:['Практикум','Практикум'],
+  lab_p:['Формулы, тренажёр и калькуляторы для лабораторных работ.','Зертханалық жұмыстарға арналған формулалар, жаттықтырғыш және калькуляторлар.'],
+  div_t:['Цена деления шкалы','Шкаланың бөлік бағасы'],
+  div_d:['Расстояние между ближайшими штрихами шкалы, выраженное в единицах измеряемой величины.','Шкаланың ең жақын штрихтары арасындағы қашықтық, өлшенетін шаманың бірлігімен өрнектелген.'],
+  div_f:['c = (b − a) / n','c = (b − a) / n'],
+  div_f2:['a и b — ближайшие подписанные штрихи (b > a), n — число делений между ними.','a және b — ең жақын жазылған штрихтар (b > a), n — олардың арасындағы бөліктер саны.'],
+  div_ex:['Пример: (20 − 10) / 5 = 2','Мысалы: (20 − 10) / 5 = 2'],
+  err_t:['Погрешность и запись результата','Қателік және нәтижені жазу'],
+  err_d:['Погрешность прибора Δ = c / 2. Результат записывай так: x = x₀ ± Δ.','Құрал қателігі Δ = c / 2. Нәтижені былай жаз: x = x₀ ± Δ.'],
+  ver_t:['Принцип нониуса','Нониус принципі'],
+  ver_d:['Вспомогательная шкала позволяет определять доли деления основной шкалы (до 0,02 мм).','Қосымша шкала негізгі шкаланың бөлік үлестерін анықтауға мүмкіндік береді (0,02 мм-ге дейін).'],
+  tr_t:['Тренажёр: считай показания','Жаттықтырғыш: көрсетілімді оқы'],
+  tr_p:['Найди цену деления по двум подписанным штрихам, затем прочитай показание.','Екі жазылған штрих бойынша бөлік бағасын тап, содан кейін көрсетілімді оқы.'],
+  k_ruler:['Линейка','Сызғыш'], k_thermo:['Термометр','Термометр'], k_cyl:['Мензурка','Мензурка'], k_vern:['Штангенциркуль','Штангенциркуль'],
+  q_obj:['Длина предмета','Заттың ұзындығы'], q_thermo:['Температура','Температура'], q_cyl:['Объём воды','Судың көлемі'], q_vern:['Размер детали','Детальдің өлшемі'],
+  q_div:['Цена деления','Бөлік бағасы'], q_read:['Показание','Көрсетілім'], q_read_v:['Размер детали, мм','Детальдің өлшемі, мм'],
+  check:['Проверить','Тексеру'], next:['Следующее','Келесі'],
+  fb_ok:['Верно!','Дұрыс!'], fb_no:['Есть ошибка.','Қате бар.'],
+  fb_div:['Цена деления','Бөлік бағасы'], fb_read:['Показание','Көрсетілім'], fb_rec:['Запись результата','Нәтиженің жазылуы'],
+  fb_your:['твой ответ','сенің жауабың'],
+  fb_vern:['Нулевой штрих нониуса стоит после отметки {m} мм; с основной шкалой совпал {j}-й штрих нониуса → {j}·0,1 = {f} мм. Итого {v} мм.','Нониустың нөлдік штрихы {m} мм белгісінен кейін тұр; негізгі шкаламен нониустың {j}-штрихы беттесті → {j}·0,1 = {f} мм. Барлығы {v} мм.'],
+  vern_hint:['Целые мм — по нулю нониуса. Десятые доли — номер штриха нониуса, совпавшего со штрихом основной шкалы.','Бүтін мм — нониустың нөлі бойынша. Ондық үлес — негізгі шкаланың штрихымен беттескен нониус штрихының нөмірі.'],
+  sess:['Верно за сессию','Сессия бойынша дұрыс'], saved_prog:['Прогресс сохраняется в базе проекта.','Прогресс жоба базасында сақталады.'],
+  prog_local:['Прогресс не сохраняется (нет доступа к базе).','Прогресс сақталмайды (базаға қолжетімділік жоқ).'],
+  scroll_h:['Прокрути шкалу вправо, если она не помещается.','Шкала сыймаса, оны оңға қарай жылжыт.'],
+  calc_div:['Калькулятор цены деления','Бөлік бағасының калькуляторы'],
+  f_a:['Меньшее число a','Кіші мән a'], f_b:['Большее число b','Үлкен мән b'], f_n:['Делений между ними n','Арасындағы бөліктер саны n'],
+  r_c:['Цена деления c','Бөлік бағасы c'], r_delta:['Погрешность прибора Δ = c/2','Құрал қателігі Δ = c/2'],
+  calc_ser:['Серия измерений','Өлшеулер сериясы'],
+  f_qty:['Величина','Шама'], f_unit:['Единица','Бірлік'], f_vals:['Результаты измерений','Өлшеу нәтижелері'],
+  f_vals_h:['через пробел или с новой строки, минимум 3','бос орынмен немесе жаңа жолдан, кемінде 3'],
+  f_cdiv:['Цена деления прибора','Құралдың бөлік бағасы'],
+  r_mean:['Среднее x̄','Орташа мән x̄'], r_dev:['Наибольшее отклонение','Ең үлкен ауытқу'], r_abs:['Абсолютная погрешность Δx','Абсолюттік қателік Δx'], r_rel:['Относительная погрешность ε','Салыстырмалы қателік ε'],
+  r_rec:['Запись результата','Нәтижені жазу'], r_n:['Число измерений','Өлшеулер саны'],
+  ser_note:['Упрощённая оценка для 7–8 классов: Δx — большая из погрешности прибора и наибольшего отклонения от среднего.','7–8 сыныпқа арналған жеңілдетілген бағалау: Δx — құрал қателігі мен орташадан ең үлкен ауытқудың үлкені.'],
+  need3:['Введи минимум 3 числа.','Кемінде 3 сан енгіз.'],
+  ser_to_work:['Создать работу с этими данными','Осы деректермен жұмыс жасау'],
+
+  w_h:['Работы учащихся','Оқушылар жұмыстары'],
+  w_p:['Проекты, опыты и самодельные приборы. Нажми на карточку, чтобы открыть работу.','Жобалар, тәжірибелер және өзі жасаған құралдар. Жұмысты ашу үшін карточканы бас.'],
+  search:['Поиск','Іздеу'], f_grade:['Класс','Сынып'], f_type:['Вид работы','Жұмыс түрі'], f_topic:['Прибор / тема','Құрал / тақырып'], f_sort:['Порядок','Реттілік'],
+  g_all:['Все классы','Барлық сынып'], ty_all:['Все виды','Барлық түр'], top_all:['Все приборы','Барлық құрал'],
+  ty_research:['Исследование','Зерттеу'], ty_diy:['Самодельный прибор','Өзі жасаған құрал'], ty_study:['Изучение прибора','Құралды зерттеу'],
+  s_new:['Сначала новые','Алдымен жаңалары'], s_best:['По баллам','Балл бойынша'],
+  mine:['Мои работы','Менің жұмыстарым'],
+  w_empty:['Пока нет работ. Стань первым — добавь свою!','Әзірге жұмыс жоқ. Бірінші бол — өзіңдікін қос!'],
+  w_none:['По этим условиям ничего не найдено.','Осы шарттар бойынша ештеңе табылмады.'],
+  ex:['Пример','Мысал'], hidden:['Скрыта','Жасырылған'], other_topic:['Другая тема','Басқа тақырып'],
+  scored_by:['жюри','қазылар'], no_score:['без оценки','бағасыз'],
+  readiness:['Самопроверка по критериям ЗЕРДЕ','ЗЕРДЕ өлшемдері бойынша өзін-өзі тексеру'],
+  readiness_n:['Это не оценка, а подсказка: какие критерии уже раскрыты в работе.','Бұл баға емес, кеңес: жұмыста қандай өлшемдер ашылған.'],
+  view_only:['Режим просмотра: чтобы добавлять работы, войди в аккаунт с правом «Может взаимодействовать».','Көру режимі: жұмыс қосу үшін «Өзара әрекеттесе алады» құқығы бар аккаунтпен кір.'],
+  no_db:['База проекта недоступна — работы не загружаются и не сохраняются. Открой приложение через ссылку в Claude.','Жоба базасы қолжетімсіз — жұмыстар жүктелмейді және сақталмайды. Қолданбаны Claude сілтемесі арқылы аш.'],
+  loading:['Загрузка…','Жүктелуде…'],
+  enter_num:['Введи числа в оба поля.','Екі өріске де сан енгіз.'],
+  choose:['— выбери —','— таңда —'],
+  esc_form:['Чтобы закрыть форму без сохранения, нажми «Отмена».','Форманы сақтамай жабу үшін «Бас тарту» батырмасын бас.'],
+
+  edit:['Изменить','Өзгерту'], del:['Удалить','Жою'], del_sure:['Точно удалить?','Шынымен жою керек пе?'], close:['Закрыть','Жабу'],
+  hide:['Скрыть','Жасыру'], unhide:['Показать','Көрсету'],
+  save:['Сохранить','Сақтау'], cancel:['Отмена','Бас тарту'], publish:['Опубликовать','Жариялау'], saving:['Сохраняю…','Сақталуда…'],
+  saved:['Сохранено','Сақталды'], deleted:['Удалено','Жойылды'],
+  by:['Авторы','Авторлары'], updated:['Обновлено','Жаңартылды'], sup:['Руководитель','Жетекші'],
+  crit_word:['Критерий','Өлшем'], pts:['баллов','балл'],
+
+  wf_new:['Новая работа','Жаңа жұмыс'], wf_edit:['Редактирование работы','Жұмысты өңдеу'],
+  wf_general:['Общие сведения','Жалпы мәліметтер'],
+  wf_title:['Название работы','Жұмыс атауы'], wf_authors:['Авторы (имя и фамилия)','Авторлары (аты-жөні)'], wf_authors_h:['через запятую','үтір арқылы'],
+  wf_grade:['Класс','Сынып'], wf_letter:['Буква / параллель','Әріп / параллель'], wf_sup:['Руководитель (необязательно)','Жетекші (міндетті емес)'],
+  wf_type:['Вид работы','Жұмыс түрі'], wf_topic:['Прибор или тема','Құрал немесе тақырып'],
+  wf_problem:['Проблема / исследовательский вопрос','Мәселе / зерттеу сұрағы'], wf_problem_h:['Что хочу выяснить? Какой вопрос ставлю?','Нені анықтағым келеді? Қандай сұрақ қоямын?'],
+  wf_relev:['Почему это важно (актуальность)','Бұл неліктен маңызды (өзектілік)'],
+  wf_goal:['Цель','Мақсат'], wf_tasks:['Задачи (по одной в строке)','Міндеттер (әр жолға біреуден)'], wf_hyp:['Гипотеза (предположение)','Болжам (гипотеза)'],
+  wf_methods:['Методы и ход работы','Әдістер және жұмыс барысы'], wf_methods_h:['Какие приборы и как использовал? Какие шаги выполнил?','Қандай құралдарды және қалай қолдандың? Қандай қадамдар орындадың?'],
+  wf_tb:['Я изучил технику безопасности и соблюдал её','Қауіпсіздік техникасын оқыдым және сақтадым'],
+  wf_tb_txt:['Меры безопасности и этики в моей работе','Жұмысымдағы қауіпсіздік және этика шаралары'],
+  wf_data:['Мои измерения','Менің өлшеулерім'],
+  wf_data_h:['Собственные данные: значения серии измерений. Расчёты выполнятся автоматически.','Жеке деректер: өлшеулер сериясының мәндері. Есептеулер автоматты түрде орындалады.'],
+  wf_analysis:['Анализ и результаты','Талдау және нәтижелер'], wf_analysis_h:['Что получилось? Сравни результаты, опиши закономерности.','Не шықты? Нәтижелерді салыстыр, заңдылықтарды сипатта.'],
+  wf_files:['Фото, схемы и файлы','Фото, сызбалар және файлдар'],
+  wf_drop:['Перетащи файлы сюда или нажми, чтобы выбрать','Файлдарды осында сүйре немесе таңдау үшін бас'],
+  wf_drop_h:['Фото сжимаются автоматически. Другие файлы — до 1 МБ (PDF, DOCX, PPTX, XLSX, CSV, TXT). Большие файлы и видео — ссылкой.','Фото автоматты түрде кішірейтіледі. Басқа файлдар — 1 МБ-қа дейін (PDF, DOCX, PPTX, XLSX, CSV, TXT). Үлкен файлдар мен бейне — сілтеме арқылы.'],
+  wf_drop_h_ed:['Как редактор ты можешь загружать файлы до 20 МБ (PDF, видео MP4/WebM, CSV, TXT, MD).','Редактор ретінде 20 МБ-қа дейін файл жүктей аласың (PDF, MP4/WebM бейне, CSV, TXT, MD).'],
+  wf_src:['Источники (по одному в строке, минимум 3)','Дереккөздер (әр жолға біреуден, кемінде 3)'], wf_src_h:['Книги, сайты, статьи — с названием и ссылкой.','Кітаптар, сайттар, мақалалар — атауымен және сілтемесімен.'],
+  wf_ai:['Помощь и использование ИИ','Көмек және ЖИ қолдану'],
+  wf_ai0:['ИИ не использовал(а)','ЖИ қолданбадым'], wf_ai1:['Использовал(а) ИИ или помощь взрослых','ЖИ немесе ересектердің көмегін қолдандым'],
+  wf_ai_txt:['Что именно сделал ИИ или помощник, а что — я сам','ЖИ немесе көмекші не істеді, ал мен өзім не істедім'],
+  wf_diary:['Дневник исследования (даты и что делал)','Зерттеу күнделігі (күндері және не істедім)'],
+  wf_concl:['Выводы','Қорытындылар'], wf_appl:['Практическая значимость: где можно применить','Практикалық маңызы: қайда қолдануға болады'],
+  wf_lim:['Ограничения и дальнейшие шаги','Шектеулер және келесі қадамдар'], wf_refl:['Чему я научился','Нені үйрендім'],
+  wf_pres:['Презентация и видео','Таныстырылым және бейне'],
+  wf_link:['Ссылка на презентацию или видео','Таныстырылымға немесе бейнеге сілтеме'], wf_link_h:['Google Drive, YouTube и т. п. (https://…)','Google Drive, YouTube т.б. (https://…)'],
+  wf_contrib:['Мой личный вклад (кто что делал)','Менің жеке үлесім (кім не істеді)'],
+  wf_topic_note:['Выбери прибор из каталога или «Другая тема».','Каталогтан құралды таңда немесе «Басқа тақырып».'],
+  v_required:['Заполни обязательные поля: название, авторы, проблема, цель.','Міндетті өрістерді толтыр: атауы, авторлары, мәселе, мақсат.'],
+  v_link:['Ссылка должна начинаться с https://','Сілтеме https:// деп басталуы керек'],
+  v_size:['Работа слишком большая для базы. Сократи текст или удали старые работы.','Жұмыс базаға тым үлкен. Мәтінді қыс немесе ескі жұмыстарды жой.'],
+  up_file:['Загрузка файла','Файл жүктелуде'], up_bad:['Файл не подошёл','Файл жарамады'],
+  up_big:['слишком большой (для обычного доступа — до 1 МБ). Загрузи ссылкой на Google Drive.','тым үлкен (қарапайым қолжетімділік үшін — 1 МБ-қа дейін). Google Drive сілтемесімен жүкте.'],
+  up_type:['этот тип файла не поддерживается','бұл файл түріне қолдау жоқ'],
+  up_max:['Не больше 6 файлов на работу.','Бір жұмысқа 6 файлдан аспауы керек.'],
+  f_save:['Скачать','Жүктеп алу'], f_saved:['Файл сохранён','Файл сақталды'], f_fail:['Не удалось скачать файл','Файлды жүктеп алу мүмкін болмады'],
+  f_open:['Открыть','Ашу'], f_missing:['Файл недоступен','Файл қолжетімсіз'],
+  ai_none:['ИИ не использовался','ЖИ қолданылмаған'], ai_used:['Использовался ИИ / помощь','ЖИ / көмек қолданылған'],
+  tb_ok:['Техника безопасности изучена','Қауіпсіздік техникасы оқылған'],
+  lbl_problem:['Проблема / вопрос','Мәселе / сұрақ'], lbl_relev:['Актуальность','Өзектілік'], lbl_goal:['Цель','Мақсат'], lbl_tasks:['Задачи','Міндеттер'], lbl_hyp:['Гипотеза','Болжам'],
+  lbl_methods:['Методы и ход работы','Әдістер және жұмыс барысы'], lbl_safety:['Безопасность и этика','Қауіпсіздік және этика'],
+  lbl_analysis:['Анализ и результаты','Талдау және нәтижелер'], lbl_diary:['Дневник','Күнделік'], lbl_src:['Источники','Дереккөздер'], lbl_ai:['Помощь и ИИ','Көмек және ЖИ'],
+  lbl_concl:['Выводы','Қорытындылар'], lbl_appl:['Практическая значимость','Практикалық маңызы'], lbl_lim:['Ограничения и дальнейшие шаги','Шектеулер және келесі қадамдар'], lbl_refl:['Рефлексия','Рефлексия'],
+  lbl_contrib:['Личный вклад','Жеке үлес'], lbl_files:['Файлы и фото','Файлдар және фото'], lbl_pres:['Презентация','Таныстырылым'],
+  tbl_title:['Таблица измерений','Өлшеулер кестесі'],
+
+  j_h:['Оценка жюри','Қазылар алқасының бағасы'],
+  j_p:['Оцени работу по 8 критериям ЗЕРДЕ. Итог = среднее арифметическое оценок минимум трёх членов жюри.','Жұмысты ЗЕРДЕ-нің 8 өлшемі бойынша баға. Қорытынды = кемінде үш қазы мүшесі бағаларының орташа арифметикалығы.'],
+  j_mine:['Моя оценка','Менің бағам'], j_comment:['Комментарий','Пікір'], j_total:['Сумма','Қосынды'],
+  j_final:['Итог','Қорытынды'], j_prelim:['предварительно — оценили {n} из 3','алдын ала — {n}/3 қазы бағалады'],
+  j_full:['оценили {n} членов жюри','{n} қазы мүшесі бағалады'],
+  j_by_crit:['По критериям (среднее)','Өлшемдер бойынша (орташа)'],
+  j_jurors:['Оценки членов жюри','Қазылар алқасы мүшелерінің бағалары'], j_anon:['Член жюри','Қазы мүшесі'],
+  j_saved:['Оценка сохранена','Баға сақталды'], j_range:['Баллы должны быть от 0 до максимума критерия.','Балдар 0-ден өлшемнің максимумына дейін болуы керек.'],
+  j_comments_h:['Комментарии жюри','Қазылар пікірлері'],
+  award_word:['Награда','Марапат'], aw0:['Пока без награды','Әзірге марапатсыз'],
+
+  r_h:['Итоги','Қорытынды'], r_p:['Рейтинг по баллам жюри, распределение наград и средние результаты по критериям.','Қазылар балдары бойынша рейтинг, марапаттарды бөлу және өлшемдер бойынша орташа нәтижелер.'],
+  r_rank:['Рейтинг','Рейтинг'], r_place:['Место','Орын'], r_work:['Работа','Жұмыс'], r_score:['Баллы','Балл'], r_jur:['Жюри','Қазы'],
+  r_class:['класс','сынып'], r_none:['Пока нет оценённых работ.','Әзірге бағаланған жұмыс жоқ.'],
+  r_tiles_works:['Оценено работ','Бағаланған жұмыс'], r_tiles_avg:['Средний балл','Орташа балл'], r_tiles_top:['Лучший результат','Ең жақсы нәтиже'], r_tiles_award:['С наградой','Марапатпен'],
+  r_cap:['Дипломов I–III степени: {a} из {n} ({p}%). Лимит по правилам — не более 60% участников (максимум {m}).','I–III дәрежелі дипломдар: {a} / {n} ({p}%). Ережеге сәйкес шек — қатысушылардың 60%-нан аспауы керек (ең көбі {m}).'],
+  r_cap_over:['Лимит превышен: по рейтингу внутри категории часть дипломов придётся не присуждать.','Шектен асып кетті: санат ішіндегі рейтинг бойынша дипломдардың бір бөлігін бермеуге тура келеді.'],
+  r_crit_avg:['Средний результат по критериям','Өлшемдер бойынша орташа нәтиже'],
+  r_pending:['Ждут оценки жюри','Қазылар бағасын күтуде'],
+  r_export:['Скачать таблицу (CSV)','Кестені жүктеу (CSV)'], r_rules:['Правила оценивания ЗЕРДЕ','ЗЕРДЕ бағалау ережелері'],
+  r_rules_src:['Новые правила 2026 · 100 баллов · РНПЦ «Дарын», приказ № 153 от 09.09.2026','2026 жаңа ережелері · 100 балл · «Дарын» РҒПО, 09.09.2026 № 153 бұйрық'],
+  r_important:['Важно','Маңызды'],
+  r_important_t:['Эти баллы — ориентир, а не автоматическая награда. Победителей определяют по рейтингу внутри каждой секции и возрастной категории. Общее число дипломов I–III степени не должно превышать 60% участников.','Бұл балдар — бағдар, автоматты марапат емес. Жеңімпаздар әр бөлім мен жас санаты ішіндегі рейтинг бойынша анықталады. I–III дәрежелі дипломдардың жалпы саны қатысушылардың 60%-нан аспауы керек.'],
+  r_jury_note:['Каждую работу оценивают минимум 3 члена жюри. Итог = среднее арифметическое оценок.','Әр жұмысты кемінде 3 қазы мүшесі бағалайды. Қорытынды = бағалардың орташа арифметикалығы.'],
+  r_teacher:['Панель жюри','Қазылар панелі'],
+  r_teacher_p:['Видна только участникам с правом редактирования.','Тек өңдеу құқығы бар қатысушыларға көрінеді.'],
+  r_rm_ex:['Удалить примеры','Мысалдарды жою'], r_rm_ex_p:['Убрать демонстрационные работы и оценки.','Демонстрациялық жұмыстар мен бағаларды алып тастау.'],
+  exdone:['Примеры удалены','Мысалдар жойылды'],
+  crit_th:['Критерий','Өлшем'], inc_th:['Что входит','Нелер кіреді'], pts_th:['Баллы','Балл'],
+  awd_th:['Награда','Марапат'], rng_th:['Баллы','Балл'],
+  heaviest:['Самый весомый критерий: данные, анализ и результаты — 20 баллов','Ең салмақты өлшем: деректер, талдау және нәтижелер — 20 балл'],
+
+  a_h:['О проекте','Жоба туралы'],
+  a_p:['Паспорт проекта по критериям ЗЕРДЕ: от проблемы до результатов.','ЗЕРДЕ өлшемдері бойынша жоба паспорты: мәселеден нәтижеге дейін.'],
+  a_prob_t:['Проблема и актуальность','Мәселе және өзектілік'],
+  a_prob:['Измерительных приборов много, а знания о них разрознены: ученики путают цену деления, не записывают погрешность и теряют баллы на практических работах. Материалы и результаты опытов хранятся в тетрадях и мессенджерах, и их трудно показать другим.','Өлшеу құралдары көп, ал олар туралы білім шашыраңқы: оқушылар бөлік бағасын шатастырады, қателікті жазбайды және практикалық жұмыстарда балл жоғалтады. Тәжірибе материалдары мен нәтижелері дәптерлер мен мессенджерлерде сақталады, оларды басқаларға көрсету қиын.'],
+  a_goal_t:['Цель, задачи, гипотеза','Мақсат, міндеттер, болжам'],
+  a_goal:['Цель — создать общедоступную «Лабораторию измерений» для учащихся 7–8 классов: справочник приборов, тренажёр считывания шкал и общую площадку для учебных работ.','Мақсат — 7–8 сынып оқушыларына арналған жалпыға қолжетімді «Өлшеу зертханасын» жасау: құралдар анықтамалығы, шкалаларды оқу жаттықтырғышы және оқу жұмыстарына арналған ортақ алаң.'],
+  a_tasks:[['Собрать каталог из 12 приборов и 5 самодельных установок (по презентации «Физические приборы»).','Сделать тренажёр: найти цену деления и прочитать показание.','Добавить калькуляторы цены деления и погрешности.','Дать учащимся загружать свои работы и открывать их с любого устройства.','Оценивать работы по критериям ЗЕРДЕ.'],['«Физикалық құралдар» таныстырылымы бойынша 12 құрал және 5 өзі жасалған қондырғы каталогын құрастыру.','Жаттықтырғыш жасау: бөлік бағасын табу және көрсетілімді оқу.','Бөлік бағасы мен қателікті есептейтін калькуляторлар қосу.','Оқушыларға өз жұмыстарын жүктеуге және кез келген құрылғыдан ашуға мүмкіндік беру.','Жұмыстарды ЗЕРДЕ өлшемдері бойынша бағалау.']],
+  a_hyp:['Гипотеза: если ученик регулярно тренируется считывать шкалы на тренажёре, доля верных ответов растёт.','Болжам: егер оқушы жаттықтырғышта шкалаларды оқуды үнемі жаттықтырса, дұрыс жауаптар үлесі өседі.'],
+  a_meth_t:['Методы, безопасность и этика','Әдістер, қауіпсіздік және этика'],
+  a_meth:['Каталог составлен по материалам презентации авторов. Тренажёр записывает только итог каждой попытки (верно / неверно), поэтому гипотезу можно проверить на реальных данных. Личные данные минимальны: имя, класс и работа. Раздел «Техника безопасности» обязателен перед опытами.','Каталог авторлардың таныстырылымы материалдары бойынша құрастырылған. Жаттықтырғыш әр талпыныстың тек қорытындысын (дұрыс / бұрыс) жазады, сондықтан болжамды нақты деректермен тексеруге болады. Жеке деректер минималды: аты, сыныбы және жұмыс. Тәжірибелерге дейін «Қауіпсіздік техникасы» бөлімі міндетті.'],
+  a_data_t:['Данные и результаты приложения','Қолданба деректері және нәтижелері'],
+  a_data_live:['Живые данные из базы проекта — обновляются сами.','Жоба базасынан тікелей деректер — өздігінен жаңарады.'],
+  a_d_att:['Попыток в тренажёре','Жаттықтырғыштағы талпыныстар'], a_d_acc:['Доля верных ответов','Дұрыс жауаптар үлесі'], a_d_stu:['Учащихся тренировалось','Жаттыққан оқушылар'], a_d_works:['Загружено работ','Жүктелген жұмыстар'],
+  a_d_hyp:['Проверка гипотезы: первые 10 попыток → последние 10','Болжамды тексеру: алғашқы 10 талпыныс → соңғы 10'],
+  a_d_hyp_ok:['{a}% → {b}% (учащихся: {n})','{a}% → {b}% (оқушылар: {n})'],
+  a_d_hyp_no:['Пока мало данных: нужны ученики, сделавшие 20+ попыток.','Әзірге дерек аз: 20+ талпыныс жасаған оқушылар қажет.'],
+  a_src_t:['Источники','Дереккөздер'],
+  a_src:[['Презентация «Физические приборы» (авторы проекта): каталог приборов, теория, задания «Сделай своими руками».','Симуляторы: efizika.ru и vascak.cz (ссылки в карточках приборов).','Критерии ЗЕРДЕ: новые правила 2026 (приказ РНПЦ «Дарын» № 153 от 09.09.2026).','Видео и материалы Google Drive — по ссылкам в карточках.'],['«Физикалық құралдар» таныстырылымы (жоба авторлары): құралдар каталогы, теория, «Өз қолыңмен жаса» тапсырмалары.','Симуляторлар: efizika.ru және vascak.cz (құрал карточкаларындағы сілтемелер).','ЗЕРДЕ өлшемдері: 2026 жылғы жаңа ережелер («Дарын» РҒПО 09.09.2026 № 153 бұйрығы).','Бейне және Google Drive материалдары — карточкалардағы сілтемелер бойынша.']],
+  a_ai_t:['Использование ИИ','ЖИ пайдалану'],
+  a_ai:['Каркас приложения разработан с помощью ИИ-ассистента Claude по заданию авторов проекта. Идея, состав каталога и учебные материалы принадлежат авторам; текст и расчёты авторы проверяют и дополняют сами.','Қолданба каркасы жоба авторларының тапсырмасы бойынша Claude ЖИ-көмекшісінің көмегімен әзірленді. Идея, каталог құрамы және оқу материалдары авторларға тиесілі; мәтін мен есептеулерді авторлар өздері тексеріп, толықтырады.'],
+  a_next_t:['Выводы и дальнейшие шаги','Қорытынды және келесі қадамдар'],
+  a_next:['Приложение объединяет справочник, практику и общую коллекцию работ. Ограничения: тренажёр учит считывать шкалы, но не заменяет реальные приборы. Дальше: добавить больше приборов, задания с нониусом 0,05 и 0,02 мм и сравнение результатов классов.','Қолданба анықтамалықты, практиканы және жұмыстардың ортақ жинағын біріктіреді. Шектеулер: жаттықтырғыш шкалаларды оқуды үйретеді, бірақ нақты құралдарды алмастырмайды. Әрі қарай: көбірек құрал, нониусы 0,05 және 0,02 мм болатын тапсырмалар және сыныптар нәтижелерін салыстыру қосу.'],
+  a_access_t:['Как войти с любого устройства','Кез келген құрылғыдан қалай кіру'],
+  a_access:[['Открой ссылку на приложение — с телефона, планшета или компьютера. Все работы и результаты хранятся на сервере, а не на устройстве.','Учащимся дай доступ «Может взаимодействовать»: они смогут добавлять свои работы и тренироваться.','Учителям и жюри дай доступ «Может редактировать»: они оценивают работы и скрывают неподходящие. Не давай это право ученикам.','Ссылка работает для участников вашей организации в Claude.'],['Қолданбаға сілтемені аш — телефоннан, планшеттен немесе компьютерден. Барлық жұмыстар мен нәтижелер құрылғыда емес, серверде сақталады.','Оқушыларға «Өзара әрекеттесе алады» қолжетімділігін бер: олар өз жұмыстарын қоса және жаттыға алады.','Мұғалімдер мен қазыларға «Өңдей алады» қолжетімділігін бер: олар жұмыстарды бағалайды және жарамсыздарын жасырады. Бұл құқықты оқушыларға берме.','Сілтеме Claude-тағы сіздің ұйымыңыздың қатысушылары үшін жұмыс істейді.']],
+  a_role:['Твоя роль','Сенің рөлің'], role_teacher:['Жюри / учитель','Қазы / мұғалім'], role_student:['Учащийся','Оқушы'], role_view:['Просмотр','Көру'],
+  foot:['Лаборатория измерений — учебный проект по физике, 7–8 класс. Данные хранятся в базе проекта.','Өлшеу зертханасы — физикадан оқу жобасы, 7–8 сынып. Деректер жоба базасында сақталады.']
+};
+/* ============================================================
+   UI strings for the GitHub Pages / Apps Script build  ([ru, kk])
+   ============================================================ */
+Object.assign(UI, {
+  /* account */
+  login:['Войти','Кіру'], logout:['Выйти','Шығу'], acct:['Аккаунт','Аккаунт'],
+  login_h:['Вход','Кіру'], reg_h:['Регистрация','Тіркелу'],
+  login_p:['Введи имя и PIN, которые указывал при регистрации. С любого устройства вход одинаковый.','Тіркелгенде көрсеткен атыңды және PIN-кодты енгіз. Кез келген құрылғыдан кіру бірдей.'],
+  reg_p:['Придумай PIN (4–32 символа) и запомни его: по имени и PIN ты сможешь зайти с телефона, планшета или школьного компьютера и увидеть свои работы.','PIN-код ойлап тап (4–32 таңба) және есіңде сақта: аты мен PIN арқылы телефоннан, планшеттен немесе мектеп компьютерінен кіріп, өз жұмыстарыңды көре аласың.'],
+  au_name:['Имя и фамилия','Аты-жөні'], au_name_h:['например: Айгерим С.','мысалы: Айгерім С.'],
+  au_pin:['PIN или пароль','PIN немесе құпиясөз'],
+  au_jury:['Я учитель / жюри','Мен мұғалім / қазымын'],
+  au_key:['Ключ жюри','Қазы кілті'], au_key_h:['его выдаёт организатор','оны ұйымдастырушы береді'],
+  au_go_login:['Войти','Кіру'], au_go_reg:['Зарегистрироваться','Тіркелу'],
+  au_to_reg:['Нет аккаунта? Регистрация','Аккаунт жоқ па? Тіркелу'], au_to_login:['Уже есть аккаунт? Войти','Аккаунт бар ма? Кіру'],
+  welcome:['Привет, {n}!','Сәлем, {n}!'], bye:['Ты вышел из аккаунта.','Аккаунттан шықтың.'],
+  login_need:['Режим просмотра. Чтобы добавлять работы и сохранять прогресс тренажёра, войди или зарегистрируйся.','Көру режимі. Жұмыс қосу және жаттығу прогресін сақтау үшін кір немесе тіркел.'],
+  role_jury_s:['жюри','қазы'],
+  net_lost:['Нет связи с сервером. Пробую ещё раз…','Серверпен байланыс жоқ. Қайта көріп жатырмын…'],
+  net_back:['Связь восстановлена.','Байланыс қалпына келді.'],
+  session_exp:['Сессия истекла — войди снова.','Сессия аяқталды — қайта кір.'],
+  /* server errors */
+  e_auth:['Нужно войти в аккаунт.','Аккаунтқа кіру қажет.'],
+  e_forbidden:['Недостаточно прав.','Құқық жеткіліксіз.'],
+  e_bad_login:['Неверное имя или PIN.','Аты немесе PIN дұрыс емес.'],
+  e_locked:['Слишком много попыток. Подожди 15 минут.','Талпыныс тым көп. 15 минут күте тұр.'],
+  e_exists:['Такое имя уже занято. Войди в аккаунт или добавь к имени букву класса.','Мұндай аты бұрыннан бар. Аккаунтқа кір немесе атына сынып әрпін қос.'],
+  e_name:['Введи имя (не короче 2 символов).','Атыңды енгіз (кемінде 2 таңба).'],
+  e_pin:['PIN — от 4 до 32 символов.','PIN — 4-тен 32 таңбаға дейін.'],
+  e_badkey:['Неверный ключ жюри.','Қазы кілті дұрыс емес.'],
+  e_busy:['Сервер занят, попробуй через минуту.','Сервер бос емес, бір минуттан кейін қайталап көр.'],
+  e_server:['Ошибка сервера. Попробуй позже.','Сервер қатесі. Кейінірек қайталап көр.'],
+  e_network:['Нет связи с сервером.','Серверпен байланыс жоқ.'],
+  e_config:['Адрес сервера не указан в config.js.','Сервер мекенжайы config.js файлында көрсетілмеген.'],
+  e_bad_file:['Файл не принят сервером.','Файлды сервер қабылдамады.'],
+  e_bad_type:['Этот тип файла не поддерживается.','Бұл файл түріне қолдау жоқ.'],
+  e_too_big:['Файл слишком большой.','Файл тым үлкен.'],
+  e_notfound:['Не найдено.','Табылмады.'],
+  e_bad_work:['Работа заполнена неверно.','Жұмыс дұрыс толтырылмаған.'],
+  e_bad_score:['Проверь баллы.','Баллдарды тексер.'],
+  no_api:['Адрес сервера (Apps Script) не указан в файле config.js — работы не загружаются и не сохраняются.','Сервер (Apps Script) мекенжайы config.js файлында көрсетілмеген — жұмыстар жүктелмейді және сақталмайды.'],
+  /* overrides of texts written for the Claude version */
+  no_db:['Не удаётся связаться с сервером проекта — работы не загружаются и не сохраняются. Проверь интернет и обнови страницу.','Жоба серверімен байланысу мүмкін емес — жұмыстар жүктелмейді және сақталмайды. Интернетті тексеріп, бетті жаңарт.'],
+  view_only:['Режим просмотра: войди или зарегистрируйся, чтобы добавлять работы.','Көру режимі: жұмыс қосу үшін кір немесе тіркел.'],
+  prog_local:['Прогресс не сохраняется — войди в аккаунт.','Прогресс сақталмайды — аккаунтқа кір.'],
+  a_access:[['Открой ссылку на приложение — с телефона, планшета или компьютера. Все работы и результаты хранятся на сервере проекта (Google Таблица и Диск), а не на устройстве.','Учащиеся регистрируются по имени и PIN: так они добавляют свои работы и могут зайти с другого устройства.','Учителя и жюри регистрируются с ключом жюри: они оценивают работы и скрывают неподходящие. Не сообщай ключ ученикам.','Без входа можно смотреть работы и результаты и пользоваться тренажёром.'],['Қолданбаға сілтемені аш — телефоннан, планшеттен немесе компьютерден. Барлық жұмыстар мен нәтижелер құрылғыда емес, жоба серверінде (Google кестесі мен Диск) сақталады.','Оқушылар аты мен PIN арқылы тіркеледі: осылайша өз жұмыстарын қосады және басқа құрылғыдан кіре алады.','Мұғалімдер мен қазылар қазы кілтімен тіркеледі: олар жұмыстарды бағалайды және жарамсыздарын жасырады. Кілтті оқушыларға айтпа.','Кірмей-ақ жұмыстар мен нәтижелерді көруге және жаттықтырғышты пайдалануға болады.']],
+  foot:['Лаборатория измерений — учебный проект по физике, 7–8 класс. Данные хранятся на сервере проекта.','Өлшеу зертханасы — физикадан оқу жобасы, 7–8 сынып. Деректер жоба серверінде сақталады.']
+});
+/* ============================================================
+   CORE: helpers, state, capabilities, data layer
+   ============================================================ */
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+};
+let lang = store.get('lm.lang') === 'kk' ? 'kk' : 'ru';
+const LI = () => lang === 'kk' ? 1 : 0;
+const tr = k => { const v = UI[k]; return v ? v[LI()] : k; };
+const T = a => a ? a[LI()] : '';
+const fill = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k] != null ? o[k] : '');
+const ic = n => `<svg class="ic" aria-hidden="true"><use href="#d-${n}"/></svg>`;
+const ui = n => `<svg class="ic ui" aria-hidden="true"><use href="#u-${n}"/></svg>`;
+const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const sid = s => String(s).replace(/[^A-Za-z0-9_\-.~:@+]/g, '-');
+const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+const fix = x => Math.round(x * 1e6) / 1e6;
+const decimals = x => { const p = String(+Number(x).toFixed(6)).split('.'); return p[1] ? p[1].length : 0; };
+const fnum = (x, d) => { if (x == null || !isFinite(x)) return '—'; const s = d == null ? String(+Number(x).toFixed(6)) : Number(x).toFixed(d); return s.replace('.', ','); };
+const parseNum = s => { const n = parseFloat(String(s).trim().replace(',', '.')); return isFinite(n) ? n : NaN; };
+const parseNums = s => String(s || '').replace(/,/g, '.').split(/[\s;]+/).filter(Boolean).map(Number).filter(isFinite);
+const fdate = ts => ts ? new Date(ts).toLocaleDateString(lang === 'kk' ? 'kk-KZ' : 'ru-RU') : '';
+const safeUrl = u => { u = String(u || '').trim(); return /^https?:\/\/[^\s"'<>]+$/i.test(u) ? u : ''; };
+const safeImg = u => /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(String(u || '')) ? u : '';
+const host = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch(e){ return u; } };
+const lines = s => String(s || '').split(/\r?\n/).map(x => x.trim()).filter(Boolean);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* ---------- state ---------- */
+const S = {
+  tab: 'dev', cat: 'all',
+  wf: { q:'', grade:'all', type:'all', topic:'all', sort:'new', mine:false },
+  works: [], scores: [], scoreMap: {}, hidden: {}, training: {},
+  loaded: { works:false, scores:false, training:false },
+  dbOk: null, err: null,
+  me: { id:null, name:'', canEdit:false, canWrite:null, role:'' },
+  tr: { kind:'ruler', q:null, res:null, sess:{ n:0, ok:0 } },
+  cal: { a:'10', b:'20', n:'5' },
+  ser: { qty:'', unit:'мм', cdiv:'', vals:'23.9 24.1 24.0 24.0 24.1' },
+  fc: new Map()
+};
+const canPost = () => !!(S.dbOk && S.me.id && S.me.canWrite !== false);
+const isJury = () => !!S.me.canEdit;
+
+/* ---------- theme ---------- */
+const effTheme = () => {
+  const a = document.documentElement.getAttribute('data-theme');
+  if (a === 'dark' || a === 'light') return a;
+  try { return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; } catch(e){ return 'light'; }
+};
+function toggleTheme(){
+  const t = effTheme() === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+  store.set('lm.theme', t);
+  renderChrome();
+}
+
+/* ---------- toast ---------- */
+function toast(msg, kind){
+  const el = document.createElement('div');
+  el.className = 'tst ' + (kind || '');
+  el.textContent = msg;
+  $('#toast').appendChild(el);
+  setTimeout(() => el.remove(), kind === 'bad' ? 6000 : 3000);
+}
+
+/* ---------- scoring ---------- */
+const critMax = CRIT.map(c => c.max);
+function rebuildScores(){
+  const by = {};
+  S.scores.forEach(s => {
+    if (!s || !s.key || !Array.isArray(s.c)) return;
+    (by[s.key] = by[s.key] || []).push(s);
+  });
+  const map = {};
+  Object.keys(by).forEach(k => {
+    const list = by[k].map(s => {
+      const c = critMax.map((m, i) => clamp(Number(s.c[i]) || 0, 0, m));
+      return { juror:s.juror, c, total:c.reduce((a,b) => a+b, 0), comment:s.comment || '', at:s.at || 0, example:!!s.example };
+    });
+    const n = list.length;
+    map[k] = { n, list, total: list.reduce((a,b) => a + b.total, 0) / n,
+      crit: critMax.map((_, i) => list.reduce((a,b) => a + b.c[i], 0) / n) };
+  });
+  S.scoreMap = map;
+}
+const awardOf = t => AWARDS.find(a => t >= a.min - 1e-9) || null;
+const scoreText = t => fnum(t, 1);
+
+/* ---------- works helpers ---------- */
+const topicName = w => {
+  const d = INSTRUMENTS.find(x => x.id === w.topic) || DIY.find(x => x.id === w.topic);
+  return d ? T(d.name) : tr('other_topic');
+};
+const topicIcon = w => {
+  const d = INSTRUMENTS.find(x => x.id === w.topic) || DIY.find(x => x.id === w.topic);
+  return d ? d.icon : 'caliper';
+};
+const typeName = t => tr('ty_' + (['research','diy','study'].includes(t) ? t : 'research'));
+function readiness(w){
+  const len = k => String(w[k] || '').trim().length;
+  const files = (w.files ? w.files.length : 0) + (w.newFiles ? w.newFiles.length : 0);
+  const srcN = lines(w.sources).length;
+  return [
+    len('problem') >= 20,
+    len('goal') >= 15 && (len('tasks') >= 15 || len('hyp') >= 10),
+    len('methods') >= 30 && !!w.tb,
+    len('analysis') >= 40 && (parseNums(w.vals).length >= 3 || files > 0),
+    srcN >= 3 && (w.aiMode === '0' || (w.aiMode === '1' && len('aiText') >= 10)),
+    len('concl') >= 30 && (len('appl') >= 10 || len('lim') >= 10),
+    !!safeUrl(w.link),
+    len('contrib') >= 15
+  ];
+}
+const dotsHTML = r => `<div class="dots" title="${esc(tr('readiness'))}">${r.map((v,i) => `<span class="dot ${v?'on':''}">${i+1}</span>`).join('')}</div>`;
+function visibleWorks(){
+  return S.works.filter(w => !S.hidden[w.key] || isJury() || w.docId === S.me.id);
+}
+function workByKey(k){ return S.works.find(w => w.key === k); }
+
+/* ---------- series statistics (simplified school estimate) ---------- */
+function roundSig(x){ return x === 0 ? 0 : +Number(x).toPrecision(1); }
+function seriesStats(vals, cdiv){
+  const n = vals.length;
+  const mean = vals.reduce((a,b) => a+b, 0) / n;
+  const dev = Math.max(...vals.map(v => Math.abs(v - mean)));
+  const dInst = cdiv > 0 ? cdiv / 2 : 0;
+  const abs = roundSig(Math.max(dInst, dev));
+  const dec = abs > 0 ? Math.max(0, -Math.floor(Math.log10(abs))) : 2;
+  return { n, mean, dev, dInst, abs, dec, rel: mean !== 0 && abs > 0 ? abs / Math.abs(mean) * 100 : NaN };
+}
+function seriesRecord(st, unit){
+  return `x = ${st.mean.toFixed(st.dec).replace('.', ',')} ± ${st.abs.toFixed(st.dec).replace('.', ',')} ${unit || ''}`.trim();
+}
+
+/* ---------- dialogs ---------- */
+function openDlg(html, cls){
+  const d = $('#dlg');
+  d.className = cls || '';
+  d.innerHTML = html;
+  if (!d.open) { try { d.showModal(); } catch(e){ d.setAttribute('open', ''); } }
+  const b = $('.dlg-b', d); if (b) b.scrollTop = 0;
+}
+function closeDlg(){
+  const d = $('#dlg');
+  try { d.close(); } catch(e){ d.removeAttribute('open'); }
+  d.innerHTML = '';
+  S.draft = null;
+}
+
+/* ============================================================
+   DATA LAYER  (storage itself lives in BACKEND — see b_claude.js / b_gas.js)
+   BACKEND must provide: init(), saveWork(w), removeWork(wid), saveScore(key,c,comment),
+   toggleHidden(key), saveTraining(nd), readParts(docId,att), putFile(f,id), deleteFile(docId,att),
+   removeExamples(), saveFile(name,blob), canSave, maxFile, jurorNames(ids)
+   and fills S.works / S.scores / S.hidden / S.training, then calls onData().
+   ============================================================ */
+let dataTimer = 0;
+function onData(){
+  clearTimeout(dataTimer);
+  dataTimer = setTimeout(() => {
+    renderChromeCounts();
+    if (S.tab === 'works') refreshWorksList();
+    else if (S.tab === 'dev') updateHeroStats();
+    else if (S.tab === 'res' || S.tab === 'about') renderTab();
+    // refresh an open work dialog's score box
+    if (S.openWork && $('#dlg').open && $('#wscore')) { const w = workByKey(S.openWork); if (w) $('#wscore').innerHTML = scoreBoxHTML(w); }
+  }, 60);
+}
+
+/* ---------- writes ---------- */
+const saveWorkDoc = w => BACKEND.saveWork(w);
+const removeWorkDoc = wid => BACKEND.removeWork(wid);
+const saveScore = (key, c, comment) => BACKEND.saveScore(key, c, comment || '');
+const toggleHidden = key => BACKEND.toggleHidden(key);
+function recordTraining(kind, ok){
+  if (!S.dbOk || !S.me.id) return;
+  const cur = S.training[S.me.id] || {};
+  const stats = Object.assign({}, cur.stats);
+  const st = Object.assign({ n:0, ok:0 }, stats[kind]);
+  st.n++; if (ok) st.ok++;
+  stats[kind] = st;
+  const first = (cur.first || []).slice();
+  if (first.length < 10) first.push(ok ? 1 : 0);
+  const hist = (cur.hist || []).concat(ok ? 1 : 0).slice(-40);
+  const nd = { stats, first, hist, at:Date.now() };
+  S.training[S.me.id] = nd;
+  BACKEND.saveTraining(nd);
+}
+/* ============================================================
+   CHROME + VIEWS
+   ============================================================ */
+const LOGO = `<svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="8" fill="var(--brand)"/><path d="M7 26h20" stroke="var(--brand-ink)" stroke-width="1.6"/><path d="M8 26v-4M11 26v-2M14 26v-4M17 26v-2M20 26v-4M23 26v-2M26 26v-4" stroke="var(--brand-ink)" stroke-width="1.4"/><path d="M17 26 23 8" stroke="#FFB44D" stroke-width="2.6" stroke-linecap="round"/><circle cx="17" cy="26" r="2.4" fill="#FFB44D"/></svg>`;
+const TABS = [['dev','t_dev','caliper'],['lab','t_lab','thermo'],['works','t_works','cyl'],['res','t_res','gauge'],['about','t_about','multi']];
+
+function renderChrome(){
+  document.documentElement.lang = lang === 'kk' ? 'kk' : 'ru';
+  document.title = tr('app');
+  const dark = effTheme() === 'dark';
+  $('#top').innerHTML = `<div class="wrap top-in">
+    <a class="brand" href="#" data-act="tab" data-v="dev" aria-label="${esc(tr('app'))}">${LOGO}<span><b>${esc(tr('app'))}</b><small>${esc(tr('app_sub'))}</small></span></a>
+    <nav class="tabs" role="tablist">${TABS.map(t => `<button class="tab" role="tab" data-act="tab" data-v="${t[0]}" aria-selected="${S.tab === t[0]}">${esc(tr(t[1]))}<span class="cnt" data-cnt="${t[0]}" hidden></span></button>`).join('')}</nav>
+    <div class="ctl">
+      ${BACKEND.accountHTML ? BACKEND.accountHTML() : ''}
+      <div class="seg" role="group" aria-label="${esc(tr('lang_lbl'))}">
+        <button data-act="lang" data-v="ru" aria-pressed="${lang === 'ru'}">РУС</button>
+        <button data-act="lang" data-v="kk" aria-pressed="${lang === 'kk'}">ҚАЗ</button>
+      </div>
+      <button class="ibtn" data-act="theme" title="${esc(dark ? tr('theme_to_light') : tr('theme_to_dark'))}" aria-label="${esc(dark ? tr('theme_to_light') : tr('theme_to_dark'))}">${ui(dark ? 'sun' : 'moon')}</button>
+    </div></div>`;
+  $('#foot').textContent = tr('foot');
+  renderChromeCounts();
+}
+function renderChromeCounts(){
+  const c = $('[data-cnt="works"]');
+  if (c) { const n = visibleWorks().length; c.textContent = n; c.hidden = !n; }
+}
+function renderAll(){ renderChrome(); renderTab(); }
+function setTab(t){
+  S.tab = t;
+  $$('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.v === t)));
+  renderTab();
+  window.scrollTo(0, 0);
+}
+const VIEWS = { dev:viewDev, lab:viewLab, works:viewWorks, res:viewResults, about:viewAbout };
+function renderTab(){
+  $('#app').innerHTML = VIEWS[S.tab]();
+}
+const secHead = (h, p, extra) => `<div class="sec-h"><div><h2>${esc(h)}</h2>${p ? `<p>${esc(p)}</p>` : ''}</div>${extra ? `<div>${extra}</div>` : ''}</div><div class="ticks"></div><div style="height:16px"></div>`;
+const extLink = (u, label, kind) => `<a class="btn sm" href="${esc(u)}" target="_blank" rel="noopener noreferrer">${ui('ext')} ${esc(label)}</a>`;
+const linkLabel = k => tr(k === 'sim' ? 'l_sim' : k === 'video' ? 'l_video' : 'l_doc');
+
+/* ---------- NOTICES ---------- */
+function statusNote(){
+  if (S.dbOk === false) return `<div class="note" style="margin-bottom:14px">${esc(tr('no_db'))}</div>`;
+  if (S.dbOk && !S.me.id) return BACKEND.loginNote ? BACKEND.loginNote() : `<div class="note brand" style="margin-bottom:14px">${esc(tr('view_only'))}</div>`;
+  if (S.dbOk && S.me.canWrite === false) return `<div class="note brand" style="margin-bottom:14px">${esc(tr('view_only'))}</div>`;
+  return '';
+}
+
+/* ============================================================
+   DEVICES
+   ============================================================ */
+function heroStats(){
+  const vis = visibleWorks();
+  return { works: vis.length, scored: vis.filter(w => S.scoreMap[w.key]).length };
+}
+function updateHeroStats(){
+  const a = $('#lcd-w'), b = $('#lcd-s'); if (!a || !b) return;
+  const h = heroStats(); a.textContent = h.works; b.textContent = h.scored;
+}
+function viewDev(){
+  const h = heroStats();
+  const list = INSTRUMENTS.filter(d => S.cat === 'all' || d.cat === S.cat);
+  const cats = [['all','cat_all'],['mech','cat_mech'],['heat','cat_heat'],['elec','cat_elec']];
+  return `
+  <section class="hero" aria-labelledby="h1">
+    <div>
+      <div class="kick">${esc(tr('hero_kick'))}</div>
+      <h1 id="h1" style="margin-top:8px">${esc(tr('app'))}</h1>
+      <p class="lead">${esc(tr('hero_lead'))}</p>
+      <div class="row">
+        ${canPost() ? `<button class="btn pri" data-act="new-work">${ui('plus')} ${esc(tr('add_work'))}</button>` : ''}
+        <button class="btn" data-act="tab" data-v="lab">${ui('lab')} ${esc(tr('to_lab'))}</button>
+      </div>
+    </div>
+    <div class="lcd" role="group" aria-label="${esc(tr('lcd_title'))}">
+      <div class="lcd-top"><span>LAB · 7–8</span><span>${esc(tr('lcd_title'))}</span></div>
+      <div class="lcd-grid">
+        <div><div class="lcd-v">${INSTRUMENTS.length}</div><div class="lcd-l">${esc(tr('st_dev'))}</div></div>
+        <div><div class="lcd-v">${DIY.length}</div><div class="lcd-l">${esc(tr('st_diy'))}</div></div>
+        <div><div class="lcd-v" id="lcd-w">${h.works}</div><div class="lcd-l">${esc(tr('st_works'))}</div></div>
+        <div><div class="lcd-v" id="lcd-s">${h.scored}</div><div class="lcd-l">${esc(tr('st_scored'))}</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="dh">
+    <div class="sec-h"><div><h2 id="dh">${esc(tr('dev_h'))}</h2><p><b>${esc(tr('what_is'))}</b> ${esc(tr('what_is_txt'))}</p></div>
+      <div class="filters" style="margin:0">${cats.map(c => `<button class="pill" data-act="cat" data-v="${c[0]}" aria-pressed="${S.cat === c[0]}">${esc(tr(c[1]))}</button>`).join('')}</div></div>
+    <div class="ticks"></div><div style="height:16px"></div>
+    <div class="grid g3">${list.map(d => `
+      <button class="card dev" data-act="dev" data-id="${d.id}">
+        <div class="dev-top"><span class="dev-ic">${ic(d.icon)}</span><div><h3>${esc(T(d.name))}</h3><div class="ms">${esc(T(d.measures))}</div></div></div>
+        <p class="small muted">${esc(T(d.desc))}</p>
+        <div class="row"><span class="chip brand">${esc(T(d.units))}</span><span class="chip">${esc(tr('cat_' + d.cat))}</span></div>
+      </button>`).join('')}</div>
+  </section>
+
+  <section class="sec" aria-labelledby="dy">
+    <div class="sec-h"><div><h2 id="dy">${esc(tr('diy_h'))}</h2><p>${esc(tr('diy_p'))}</p></div></div>
+    <div class="ticks"></div><div style="height:16px"></div>
+    <div class="grid g3">${DIY.map(d => `
+      <div class="card dev diy" style="cursor:default">
+        <div class="dev-top"><span class="dev-ic">${ic(d.icon)}</span><h3>${esc(T(d.name))}</h3></div>
+        <p class="small muted">${esc(T(d.desc))}</p>
+        <div class="row" style="margin-top:auto">
+          ${extLink(d.u, tr('open_guide'))}
+          ${canPost() ? `<button class="btn sm pri" data-act="new-work" data-topic="${d.id}" data-type="diy">${esc(tr('make_project'))}</button>` : ''}
+        </div>
+      </div>`).join('')}</div>
+  </section>
+
+  <section class="sec" aria-labelledby="sf">
+    <div class="sec-h"><div><h2 id="sf">${esc(tr('safe_h'))}</h2><p>${esc(tr('safe_p'))}</p></div><div>${extLink(RES_LINKS.safety, tr('res_safety'))}</div></div>
+    <div class="ticks"></div><div style="height:16px"></div>
+    <ol class="saf">${SAFETY.map(s => `<li><span>${esc(T(s))}</span></li>`).join('')}</ol>
+  </section>
+
+  <section class="sec">
+    <div class="sec-h"><div><h2>${esc(tr('res_h'))}</h2></div></div>
+    <div class="ticks"></div><div style="height:16px"></div>
+    <div class="linkrow">
+      ${extLink(RES_LINKS.test, tr('res_test'))}${extLink(RES_LINKS.video, tr('res_video'))}${extLink(RES_LINKS.bot, tr('res_bot'))}${extLink(RES_LINKS.theory, tr('res_theory'))}
+    </div>
+    <p class="hint" style="margin-top:8px">${esc(tr('ext_note'))}</p>
+  </section>`;
+}
+
+function openDevice(id){
+  const d = INSTRUMENTS.find(x => x.id === id); if (!d) return;
+  S.dlgState = { t:'dev', id };
+  const links = d.links || [];
+  openDlg(`
+    <div class="dlg-h"><span class="big-ic">${ic(d.icon)}</span>
+      <div style="flex:1;min-width:0"><div class="kick">${esc(tr('cat_' + d.cat))}</div><h2 id="dlgT">${esc(T(d.name))}</h2></div>
+      <button class="ibtn" data-act="close" aria-label="${esc(tr('close'))}">${ui('x')}</button></div>
+    <div class="dlg-b">
+      <p>${esc(T(d.desc))}</p>
+      <dl class="kv" style="margin-top:14px">
+        <dt>${esc(tr('measures'))}</dt><dd>${esc(T(d.measures))}</dd>
+        <dt>${esc(tr('units'))}</dt><dd class="mono">${esc(T(d.units))}</dd>
+        <dt>${esc(tr('typical'))}</dt><dd>${esc(T(d.typical))}<div class="hint">${esc(tr('typ_note'))}</div></dd>
+      </dl>
+      <h3 style="margin-top:20px;font-size:19px">${esc(tr('how_to'))}</h3>
+      <ol class="steps">${d.how.map(h => `<li>${esc(T(h))}</li>`).join('')}</ol>
+      <div class="note" style="margin-top:16px">${ui('warn')} <b>${esc(tr('safety_h'))}.</b> ${esc(T(d.safe))}</div>
+      ${links.length ? `<h3 style="margin-top:20px;font-size:19px">${esc(tr('materials'))}</h3><div class="linkrow" style="margin-top:8px">${links.map(l => extLink(l.u, linkLabel(l.k))).join('')}</div><p class="hint" style="margin-top:6px">${esc(tr('ext_note'))}</p>` : ''}
+    </div>
+    <div class="dlg-f">
+      ${d.train ? `<button class="btn" data-act="train-kind" data-v="${d.train}">${ui('lab')} ${esc(tr('train_this'))}</button>` : ''}
+      ${canPost() ? `<button class="btn pri" data-act="new-work" data-topic="${d.id}">${ui('plus')} ${esc(tr('make_work'))}</button>` : ''}
+      <span class="sp"></span><button class="btn" data-act="close">${esc(tr('close'))}</button>
+    </div>`);
+}
+
+/* ============================================================
+   LAB: trainer + calculators
+   ============================================================ */
+const pick = a => a[Math.floor(Math.random() * a.length)];
+function newQuestion(kind){
+  if (kind === 'vern') { const m = 10 + Math.floor(Math.random() * 80), j = Math.floor(Math.random() * 10); return { kind, m, j, v:fix(m + j / 10) }; }
+  const p = pick(PRESETS[kind]), N = Math.round((p.max - p.min) / p.d);
+  let k; do { k = 1 + Math.floor(Math.random() * (N - 1)); } while (k % p.every === 0);
+  return { kind, p, N, k, v:fix(p.min + k * p.d) };
+}
+
+function tickLoop(q, fnTick){
+  for (let i = 0; i <= q.N; i++) {
+    const lab = i % q.p.every === 0;
+    const mid = !lab && q.p.every % 2 === 0 && i % (q.p.every / 2) === 0;
+    fnTick(i, lab, mid);
+  }
+}
+function svgRuler(q){
+  const W = 640, x0 = 30, x1 = 610, ppu = (x1 - x0) / q.N, xv = x0 + q.k * ppu;
+  let s = `<svg viewBox="0 0 ${W} 150" style="width:100%;min-width:560px" role="img" aria-label="${esc(tr('k_ruler'))}">`;
+  s += `<rect class="sv-obj" x="${x0}" y="14" width="${xv - x0}" height="28" rx="3"/><line class="sv-cur" x1="${xv}" y1="42" x2="${xv}" y2="76"/>`;
+  s += `<rect class="sv-body" x="${x0 - 16}" y="76" width="${x1 - x0 + 32}" height="62" rx="4"/>`;
+  tickLoop(q, (i, lab, mid) => {
+    const x = x0 + i * ppu, len = lab ? 26 : mid ? 18 : 12;
+    s += `<line class="sv-t" x1="${x}" y1="76" x2="${x}" y2="${76 + len}"/>`;
+    if (lab) s += `<text class="sv-tx" x="${x}" y="${76 + len + 16}" text-anchor="middle">${fnum(q.p.min + i * q.p.d)}</text>`;
+  });
+  return s + '</svg>';
+}
+function svgVertical(q){
+  const yT = 44, yB = 336, Y = i => yB - (i / q.N) * (yB - yT), yk = Y(q.k), isT = q.kind === 'thermo';
+  let s = `<svg viewBox="0 0 280 410" style="width:min(100%,300px)" role="img" aria-label="${esc(tr('k_' + q.kind))}">`;
+  if (isT) {
+    s += `<rect class="sv-glass" x="106" y="26" width="26" height="322" rx="13"/><circle class="sv-glass" cx="119" cy="362" r="28"/>`;
+    s += `<circle class="sv-liq" cx="119" cy="362" r="18"/><rect class="sv-liq" x="113" y="${yk}" width="12" height="${362 - yk}"/>`;
+    tickLoop(q, (i, lab, mid) => {
+      const y = Y(i), len = lab ? 24 : mid ? 16 : 10;
+      s += `<line class="sv-t" x1="142" y1="${y}" x2="${142 + len}" y2="${y}"/>`;
+      if (lab) s += `<text class="sv-tx" x="${142 + len + 6}" y="${y + 4}">${fnum(q.p.min + i * q.p.d)}</text>`;
+    });
+    s += `<line class="sv-cur" x1="100" y1="${yk}" x2="180" y2="${yk}"/>`;
+  } else {
+    s += `<rect class="sv-glass" x="100" y="28" width="90" height="330" rx="6"/>`;
+    s += `<rect x="101" y="${yk}" width="88" height="${357 - yk}" style="fill:var(--brand);opacity:.32"/><line class="sv-cur" x1="101" y1="${yk}" x2="189" y2="${yk}"/>`;
+    tickLoop(q, (i, lab, mid) => {
+      const y = Y(i), len = lab ? 26 : mid ? 17 : 11;
+      s += `<line class="sv-t" x1="100" y1="${y}" x2="${100 + len}" y2="${y}"/>`;
+      if (lab) s += `<text class="sv-tx" x="92" y="${y + 4}" text-anchor="end">${fnum(q.p.min + i * q.p.d)}</text>`;
+    });
+  }
+  return s + '</svg>';
+}
+function svgVernier(q){
+  const K = 20, start = q.m - 8, W = 600, X = mm => (mm - start) * K, v = q.m + q.j / 10, x0 = X(v);
+  let s = `<svg viewBox="0 0 ${W} 190" style="width:100%;min-width:520px" role="img" aria-label="${esc(tr('k_vern'))}">`;
+  s += `<rect class="sv-body" x="0" y="10" width="${W}" height="64"/>`;
+  for (let mm = Math.ceil(start); mm <= Math.floor(start + 30); mm++) {
+    const x = X(mm), len = mm % 10 === 0 ? 26 : mm % 5 === 0 ? 18 : 11;
+    s += `<line class="sv-t" x1="${x}" y1="74" x2="${x}" y2="${74 - len}"/>`;
+    if (mm % 10 === 0) s += `<text class="sv-tx" x="${x}" y="40" text-anchor="middle">${mm}</text>`;
+  }
+  s += `<rect class="sv-jaw" x="${x0 - 8}" y="74" width="${9 * K + 24}" height="68"/>`;
+  for (let i = 0; i <= 10; i++) {
+    const x = x0 + i * 0.9 * K, len = i % 5 === 0 ? 20 : 13;
+    s += `<line class="sv-t" x1="${x}" y1="74" x2="${x}" y2="${74 + len}"/>`;
+    s += `<text class="sv-tx" x="${x}" y="${74 + 36}" text-anchor="middle" style="font-size:10.5px">${i}</text>`;
+  }
+  s += `<text x="${x0 + 4.5 * K}" y="176" text-anchor="middle" class="sv-tx" style="font-weight:500;opacity:.7;font-size:11px">0,1 мм</text></svg>`;
+  return s;
+}
+function trainerHTML(){
+  const t = S.tr, q = t.q, kind = t.kind, res = t.res;
+  const u = kind === 'vern' ? 'мм' : q.p.u;
+  const svg = kind === 'ruler' ? svgRuler(q) : kind === 'vern' ? svgVernier(q) : svgVertical(q);
+  const dis = res ? 'disabled' : '';
+  const label = tr(kind === 'ruler' ? 'q_obj' : kind === 'thermo' ? 'q_thermo' : kind === 'cyl' ? 'q_cyl' : 'q_vern');
+  let fb = '';
+  if (res) {
+    let body;
+    if (kind === 'vern') {
+      body = `<div>${esc(fill(tr('fb_vern'), { m:q.m, j:q.j, f:fnum(q.j / 10, 1), v:fnum(q.v, 1) }))}</div>
+        <div class="formula">L = ${fnum(q.v, 1)} ± 0,1 мм</div>`;
+    } else {
+      const i0 = Math.floor(q.k / q.p.every) * q.p.every, a = q.p.min + i0 * q.p.d, b = a + q.p.every * q.p.d, dec = decimals(q.p.d / 2);
+      body = `<div>${esc(tr('fb_div'))}: <b class="mono">c = (${fnum(fix(b))} − ${fnum(fix(a))}) / ${q.p.every} = ${fnum(q.p.d)} ${esc(u)}</b> ${res.okDiv ? '✓' : '✗ (' + esc(tr('fb_your')) + ': ' + esc(fnum(res.dv)) + ')'}</div>
+        <div>${esc(tr('fb_read'))}: <b class="mono">${fnum(q.v)} ${esc(u)}</b> ${res.okRead ? '✓' : '✗ (' + esc(tr('fb_your')) + ': ' + esc(fnum(res.rd)) + ')'}</div>
+        <div class="formula">${esc(tr('fb_rec'))}: x = ${fnum(q.v, dec)} ± ${fnum(q.p.d / 2)} ${esc(u)}</div>`;
+    }
+    fb = `<div class="fb ${res.ok ? 'ok' : 'no'}" role="status"><b>${esc(tr(res.ok ? 'fb_ok' : 'fb_no'))}</b>${body}</div>`;
+  }
+  return `<div class="card pad" id="trainer">
+    <div class="sec-h" style="margin-bottom:12px"><div><h3 style="font-size:22px">${esc(tr('tr_t'))}</h3><p class="muted small">${esc(tr('tr_p'))}</p></div>
+      <div class="filters" style="margin:0">${TRAIN_KINDS.map(k => `<button class="pill" data-act="train-kind" data-v="${k}" aria-pressed="${k === kind}">${esc(tr('k_' + k))}</button>`).join('')}</div></div>
+    <div class="scalebox">${svg}</div>
+    ${kind === 'vern' ? `<p class="hint">${esc(tr('vern_hint'))}</p>` : (kind === 'ruler' ? `<p class="hint">${esc(tr('scroll_h'))}</p>` : '')}
+    <form data-form="trainer" autocomplete="off">
+      <div class="qrow">
+        ${kind === 'vern' ? '' : `<div><label class="f" for="tr-div">${esc(tr('q_div'))}, ${esc(u)}</label><input class="in mono" id="tr-div" inputmode="decimal" value="${res ? esc(res.dvRaw) : ''}" ${dis}></div>`}
+        <div><label class="f" for="tr-read">${esc(label)}, ${esc(u)}</label><input class="in mono" id="tr-read" inputmode="decimal" value="${res ? esc(res.rdRaw) : ''}" ${dis}></div>
+        <div style="display:flex;align-items:end;gap:8px">${res
+          ? `<button type="button" class="btn pri" data-act="tr-next">${esc(tr('next'))}</button>`
+          : `<button type="submit" class="btn pri">${ui('check')} ${esc(tr('check'))}</button>`}</div>
+      </div>
+    </form>
+    ${fb}
+    <div class="row small muted" style="margin-top:12px"><span>${esc(tr('sess'))}: <b class="mono">${t.sess.ok} / ${t.sess.n}</b></span><span class="sp"></span><span>${esc(canPost() ? tr('saved_prog') : tr('prog_local'))}</span></div>
+  </div>`;
+}
+function checkTrainer(){
+  const t = S.tr, q = t.q; if (!q || t.res) return;
+  const rdRaw = ($('#tr-read') || {}).value || '', dvRaw = ($('#tr-div') || {}).value || '';
+  const rd = parseNum(rdRaw), dv = parseNum(dvRaw);
+  if (!isFinite(rd) || (q.kind !== 'vern' && !isFinite(dv))) { toast(tr('enter_num'), 'bad'); return; }
+  let res;
+  if (q.kind === 'vern') { const ok = Math.abs(rd - q.v) < 0.051; res = { ok, okRead:ok, rd, rdRaw, dvRaw }; }
+  else {
+    const okDiv = Math.abs(dv - q.p.d) < 1e-4, okRead = Math.abs(rd - q.v) < q.p.d * 0.26;
+    res = { ok:okDiv && okRead, okDiv, okRead, dv, rd, dvRaw, rdRaw };
+  }
+  t.res = res; t.sess.n++; if (res.ok) t.sess.ok++;
+  recordTraining(q.kind, res.ok);
+  $('#trainer').outerHTML = trainerHTML();
+}
+
+function calcDivOut(){
+  const a = parseNum(S.cal.a), b = parseNum(S.cal.b), n = parseNum(S.cal.n);
+  if (!isFinite(a) || !isFinite(b) || !isFinite(n) || n <= 0 || b <= a) return `<span class="muted">—</span>`;
+  const c = fix((b - a) / n);
+  return `<div class="res">c = (${fnum(b)} − ${fnum(a)}) / ${fnum(n)} = ${fnum(c)}</div>
+    <div class="res" style="margin-top:6px">Δ = c / 2 = ${fnum(fix(c / 2))}</div>`;
+}
+function serOut(){
+  const c = parseNum(S.ser.cdiv);
+  return statsBlock(parseNums(S.ser.vals), isFinite(c) ? c : 0, S.ser.unit);
+}
+function viewLab(){
+  return `
+  ${secHead(tr('lab_h'), tr('lab_p'))}
+  <div class="grid g2">
+    <div class="card pad"><h3 style="font-size:21px">${esc(tr('div_t'))}</h3>
+      <p class="muted" style="margin-top:6px">${esc(tr('div_d'))}</p>
+      <div class="formula">${esc(tr('div_f'))}</div><p class="hint">${esc(tr('div_f2'))}</p>
+      <p class="mono" style="margin-top:8px;color:var(--read);font-weight:600">${esc(tr('div_ex'))}</p>
+      <hr style="border:0;border-top:1px solid var(--line);margin:14px 0">
+      <h4 style="font-size:16px">${esc(tr('err_t'))}</h4><p class="muted small" style="margin-top:4px">${esc(tr('err_d'))}</p></div>
+    <div class="card pad"><h3 style="font-size:21px">${esc(tr('ver_t'))}</h3>
+      <p class="muted" style="margin-top:6px">${esc(tr('ver_d'))}</p>
+      <div class="scalebox" style="margin-top:12px">${svgVernier({ m:23, j:4 })}</div>
+      <p class="hint">${esc(tr('vern_hint'))}</p></div>
+  </div>
+  <div style="height:16px"></div>
+  ${trainerHTML_placeholder()}
+  <div style="height:16px"></div>
+  <div class="grid g2">
+    <div class="card pad"><h3 style="font-size:21px">${esc(tr('calc_div'))}</h3>
+      <div class="fgrid" style="margin-top:12px">
+        <div class="fld"><label class="f" for="cal-a">${esc(tr('f_a'))}</label><input class="in mono" id="cal-a" data-in="cal" data-f="a" inputmode="decimal" value="${esc(S.cal.a)}"></div>
+        <div class="fld"><label class="f" for="cal-b">${esc(tr('f_b'))}</label><input class="in mono" id="cal-b" data-in="cal" data-f="b" inputmode="decimal" value="${esc(S.cal.b)}"></div>
+        <div class="fld"><label class="f" for="cal-n">${esc(tr('f_n'))}</label><input class="in mono" id="cal-n" data-in="cal" data-f="n" inputmode="decimal" value="${esc(S.cal.n)}"></div>
+      </div>
+      <div id="cal-out">${calcDivOut()}</div></div>
+    <div class="card pad"><h3 style="font-size:21px">${esc(tr('calc_ser'))}</h3>
+      <div class="fgrid" style="margin-top:12px">
+        <div class="fld"><label class="f" for="ser-qty">${esc(tr('f_qty'))}</label><input class="in" id="ser-qty" data-in="ser" data-f="qty" value="${esc(S.ser.qty)}"></div>
+        <div class="fld"><label class="f" for="ser-unit">${esc(tr('f_unit'))}</label><input class="in" id="ser-unit" data-in="ser" data-f="unit" value="${esc(S.ser.unit)}"></div>
+        <div class="fld"><label class="f" for="ser-cdiv">${esc(tr('f_cdiv'))}</label><input class="in mono" id="ser-cdiv" data-in="ser" data-f="cdiv" inputmode="decimal" value="${esc(S.ser.cdiv)}"></div>
+      </div>
+      <div class="fld"><label class="f" for="ser-vals">${esc(tr('f_vals'))} <span class="h">— ${esc(tr('f_vals_h'))}</span></label><textarea class="in mono" id="ser-vals" data-in="ser" data-f="vals" rows="2">${esc(S.ser.vals)}</textarea></div>
+      <div id="ser-out">${serOut()}</div>
+      <p class="hint">${esc(tr('ser_note'))}</p>
+      ${canPost() ? `<div class="row" style="margin-top:10px"><button class="btn pri sm" data-act="ser-to-work">${ui('plus')} ${esc(tr('ser_to_work'))}</button></div>` : ''}
+    </div>
+  </div>`;
+}
+const trainerHTML_placeholder = () => { if (!S.tr.q || S.tr.q.kind !== S.tr.kind) { S.tr.q = newQuestion(S.tr.kind); S.tr.res = null; } return trainerHTML(); };
+
+/* ============================================================
+   WORKS LIST
+   ============================================================ */
+function viewWorks(){
+  const topics = INSTRUMENTS.concat(DIY);
+  const sel = (id, key, opts) => `<select class="in" id="${id}" data-in="wf" data-f="${key}" style="width:auto;min-width:150px" aria-label="${esc(tr('f_' + (key === 'topic' ? 'topic' : key === 'sort' ? 'sort' : key)))}">${opts.map(o => `<option value="${esc(o[0])}" ${S.wf[key] === o[0] ? 'selected' : ''}>${esc(o[1])}</option>`).join('')}</select>`;
+  return `
+  ${secHead(tr('w_h'), tr('w_p'), canPost() ? `<button class="btn pri" data-act="new-work">${ui('plus')} ${esc(tr('add_work'))}</button>` : '')}
+  ${statusNote()}
+  <div class="filters">
+    <input class="in" type="search" id="wq" data-in="wf" data-f="q" placeholder="${esc(tr('search'))}" aria-label="${esc(tr('search'))}" value="${esc(S.wf.q)}" style="max-width:220px">
+    ${sel('wg', 'grade', [['all', tr('g_all')], ['7', '7 ' + tr('r_class')], ['8', '8 ' + tr('r_class')]])}
+    ${sel('wt', 'type', [['all', tr('ty_all')], ['research', tr('ty_research')], ['diy', tr('ty_diy')], ['study', tr('ty_study')]])}
+    ${sel('wo', 'topic', [['all', tr('top_all')]].concat(topics.map(d => [d.id, T(d.name)])))}
+    ${sel('ws', 'sort', [['new', tr('s_new')], ['best', tr('s_best')]])}
+    ${S.me.id ? `<button class="pill" data-act="mine" aria-pressed="${S.wf.mine}">${esc(tr('mine'))}</button>` : ''}
+  </div>
+  <div id="wlist">${worksListHTML()}</div>`;
+}
+function filteredWorks(){
+  const f = S.wf, q = f.q.trim().toLowerCase();
+  let list = visibleWorks().filter(w =>
+    (f.grade === 'all' || String(w.grade) === f.grade) &&
+    (f.type === 'all' || w.type === f.type) &&
+    (f.topic === 'all' || w.topic === f.topic) &&
+    (!f.mine || w.docId === S.me.id) &&
+    (!q || (w.title + ' ' + w.authors + ' ' + topicName(w)).toLowerCase().includes(q)));
+  list.sort(f.sort === 'best'
+    ? (a, b) => ((S.scoreMap[b.key] || { total:-1 }).total - (S.scoreMap[a.key] || { total:-1 }).total) || (b.updated || 0) - (a.updated || 0)
+    : (a, b) => (b.updated || b.created || 0) - (a.updated || a.created || 0));
+  return list;
+}
+function workCard(w){
+  const sc = S.scoreMap[w.key], aw = sc ? awardOf(sc.total) : null, thumb = safeImg(w.thumb);
+  return `<button class="card wcard" data-act="open-work" data-k="${esc(w.key)}">
+    <div class="wcover">${thumb ? `<img src="${thumb}" alt="" loading="lazy">` : ic(topicIcon(w))}${sc ? `<span class="badge-score">${scoreText(sc.total)}<small>/100</small></span>` : ''}</div>
+    <div class="wbody">
+      <div class="row"><span class="chip brand">${esc(typeName(w.type))}</span><span class="chip">${esc(w.grade || '')}${w.letter ? esc(w.letter) : ''} ${esc(tr('r_class'))}</span>${w.example ? `<span class="chip ex">${esc(tr('ex'))}</span>` : ''}${S.hidden[w.key] ? `<span class="chip warn">${esc(tr('hidden'))}</span>` : ''}</div>
+      <h3>${esc(w.title)}</h3>
+      <div class="small muted">${esc(w.authors)} · ${esc(topicName(w))}</div>
+      <div class="row" style="margin-top:auto">${dotsHTML(readiness(w))}<span class="sp"></span>${aw ? `<span class="award a${aw.id}">${esc(T(aw.name))}</span>` : `<span class="small muted">${esc(tr('no_score'))}</span>`}</div>
+    </div></button>`;
+}
+function worksListHTML(){
+  if (S.dbOk === false) return '';
+  if (S.dbOk === null || !S.loaded.works) return `<div class="grid g3"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>`;
+  const list = filteredWorks();
+  if (!list.length) return `<div class="empty">${esc(visibleWorks().length ? tr('w_none') : tr('w_empty'))}</div>`;
+  return `<div class="grid g3">${list.map(workCard).join('')}</div>`;
+}
+function refreshWorksList(){ const el = $('#wlist'); if (el) el.innerHTML = worksListHTML(); }
+
+/* ============================================================
+   RESULTS
+   ============================================================ */
+function rankedByGrade(){
+  const scored = visibleWorks().filter(w => S.scoreMap[w.key]);
+  const g = { '7':[], '8':[] };
+  scored.forEach(w => { (g[String(w.grade)] || (g[String(w.grade)] = [])).push(w); });
+  Object.keys(g).forEach(k => g[k].sort((a, b) => S.scoreMap[b.key].total - S.scoreMap[a.key].total));
+  return { scored, g };
+}
+function viewResults(){
+  const { scored, g } = rankedByGrade();
+  const pending = visibleWorks().filter(w => !S.scoreMap[w.key] && !w.example);
+  const n = scored.length, totals = scored.map(w => S.scoreMap[w.key].total);
+  const avg = n ? totals.reduce((a, b) => a + b, 0) / n : 0, top = n ? Math.max(...totals) : 0;
+  const awarded = scored.filter(w => { const a = awardOf(S.scoreMap[w.key].total); return a && a.id <= 3; }).length;
+  const maxAw = Math.floor(n * 0.6), pct = n ? Math.round(awarded / n * 100) : 0;
+  const critAvg = critMax.map((m, i) => n ? scored.reduce((a, w) => a + S.scoreMap[w.key].crit[i], 0) / n : 0);
+  const hasEx = S.works.some(w => w.example) || S.scores.some(s => s.example);
+  const tile = (v, l) => `<div class="card tile"><div class="v">${v}</div><div class="l">${esc(l)}</div></div>`;
+  const table = grade => {
+    const list = g[grade] || []; if (!list.length) return '';
+    return `<div class="sec" style="margin-top:22px"><h3 style="font-size:21px;margin-bottom:10px">${grade} ${esc(tr('r_class'))}</h3>
+      <div class="tbl-w"><table class="tbl"><thead><tr><th>${esc(tr('r_place'))}</th><th>${esc(tr('r_work'))}</th><th class="n">${esc(tr('r_score'))}</th><th style="min-width:110px"></th><th>${esc(tr('award_word'))}</th><th class="n">${esc(tr('r_jur'))}</th></tr></thead><tbody>
+      ${list.map((w, i) => { const sc = S.scoreMap[w.key], a = awardOf(sc.total); return `<tr>
+        <td class="mono">${i + 1}</td>
+        <td><a href="#" data-act="open-work" data-k="${esc(w.key)}" style="color:var(--ink);font-weight:600;text-decoration:none">${esc(w.title)}</a>${w.example ? ` <span class="chip ex">${esc(tr('ex'))}</span>` : ''}<div class="small muted">${esc(w.authors)}</div></td>
+        <td class="n mono" style="font-weight:600">${scoreText(sc.total)}</td>
+        <td><div class="bar read"><i style="width:${clamp(sc.total, 0, 100)}%"></i></div></td>
+        <td>${a ? `<span class="award a${a.id}">${esc(T(a.name))}</span>` : `<span class="award a0">${esc(tr('aw0'))}</span>`}</td>
+        <td class="n mono">${sc.n}</td></tr>`; }).join('')}
+      </tbody></table></div></div>`;
+  };
+  return `
+  ${secHead(tr('r_h'), tr('r_p'), scored.length && BACKEND.canSave && isJury() ? `<button class="btn" data-act="export">${ui('dl')} ${esc(tr('r_export'))}</button>` : '')}
+  ${statusNote()}
+  <div class="grid g3" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr))">
+    ${tile(n, tr('r_tiles_works'))}${tile(n ? fnum(avg, 1) : '—', tr('r_tiles_avg'))}${tile(n ? fnum(top, 1) : '—', tr('r_tiles_top'))}${tile(awarded, tr('r_tiles_award'))}
+  </div>
+  ${n ? `<div class="note ${pct > 60 && n >= 5 ? '' : 'brand'}" style="margin-top:14px">${esc(fill(tr('r_cap'), { a:awarded, n, p:pct, m:maxAw }))}${pct > 60 && n >= 5 ? ' ' + esc(tr('r_cap_over')) : ''}</div>` : ''}
+  ${n ? '' : `<div class="empty" style="margin-top:14px">${esc(tr('r_none'))}</div>`}
+  ${table('7')}${table('8')}
+  ${n ? `<div class="sec"><h3 style="font-size:21px;margin-bottom:10px">${esc(tr('r_crit_avg'))}</h3><div class="card pad" style="display:grid;gap:10px">
+    ${CRIT.map((c, i) => `<div style="display:grid;grid-template-columns:auto 1fr auto;gap:4px 12px;align-items:center"><span class="crit-n">${i + 1}</span><div><div class="small" style="font-weight:600">${esc(T(c.name))}</div><div class="bar" style="margin-top:4px"><i style="width:${critAvg[i] / c.max * 100}%"></i></div></div><span class="mono small">${fnum(critAvg[i], 1)} / ${c.max}</span></div>`).join('')}</div></div>` : ''}
+  ${pending.length ? `<div class="sec"><h3 style="font-size:21px;margin-bottom:10px">${esc(tr('r_pending'))} <span class="chip">${pending.length}</span></h3><div class="grid g3">${pending.map(workCard).join('')}</div></div>` : ''}
+  <div class="sec">
+    <h3 style="font-size:21px">${esc(tr('r_rules'))}</h3><p class="muted small" style="margin:4px 0 12px">${esc(tr('r_rules_src'))} · ${esc(tr('r_jury_note'))}</p>
+    ${critTableHTML()}
+  </div>
+  ${isJury() && hasEx ? `<div class="sec"><div class="card pad"><h3 style="font-size:19px">${esc(tr('r_teacher'))}</h3><p class="muted small" style="margin:4px 0 12px">${esc(tr('r_teacher_p'))}</p><div class="row"><button class="btn danger" data-act="rm-examples">${ui('trash')} ${esc(tr('r_rm_ex'))}</button><span class="small muted">${esc(tr('r_rm_ex_p'))}</span></div></div></div>` : ''}`;
+}
+function critTableHTML(){
+  return `<div class="tbl-w"><table class="tbl"><thead><tr><th></th><th>${esc(tr('crit_th'))}</th><th>${esc(tr('inc_th'))}</th><th class="n">${esc(tr('pts_th'))}</th></tr></thead><tbody>
+    ${CRIT.map((c, i) => `<tr><td><span class="crit-n">${i + 1}</span></td><td style="font-weight:600;min-width:170px">${esc(T(c.name))}</td><td class="small muted" style="min-width:260px">${esc(T(c.inc))}</td><td class="n mono" style="font-weight:600${c.max === 20 ? ';color:var(--read)' : ''}">${c.max}</td></tr>`).join('')}
+  </tbody></table></div>
+  <p class="small" style="margin:10px 0;font-weight:600;color:var(--read)">${esc(tr('heaviest'))}</p>
+  <div class="tbl-w" style="max-width:520px"><table class="tbl"><thead><tr><th>${esc(tr('awd_th'))}</th><th>${esc(tr('rng_th'))}</th></tr></thead><tbody>
+    ${AWARDS.map(a => `<tr><td><span class="award a${a.id}">${esc(T(a.name))}</span></td><td class="mono">${a.range}</td></tr>`).join('')}
+  </tbody></table></div>
+  <div class="note" style="margin-top:12px"><b>${esc(tr('r_important'))}.</b> ${esc(tr('r_important_t'))}</div>`;
+}
+
+/* ============================================================
+   ABOUT
+   ============================================================ */
+function trainingAggregate(){
+  let att = 0, ok = 0, stu = 0, fa = 0, la = 0, hn = 0;
+  Object.keys(S.training).forEach(id => {
+    const d = S.training[id] || {}, st = d.stats || {};
+    let n = 0, o = 0;
+    Object.keys(st).forEach(k => { n += st[k].n || 0; o += st[k].ok || 0; });
+    if (n) { stu++; att += n; ok += o; }
+    if (n >= 20 && d.first && d.first.length >= 10 && d.hist && d.hist.length >= 10) {
+      const f = d.first.slice(0, 10).reduce((a, b) => a + b, 0) / 10, l = d.hist.slice(-10).reduce((a, b) => a + b, 0) / 10;
+      fa += f; la += l; hn++;
+    }
+  });
+  return { att, ok, stu, hn, fa: hn ? fa / hn * 100 : 0, la: hn ? la / hn * 100 : 0 };
+}
+function viewAbout(){
+  const a = trainingAggregate(), role = isJury() ? 'role_teacher' : S.me.id ? 'role_student' : 'role_view';
+  const sec = (n, title, body) => `<div class="crit"><span class="crit-n">${n}</span><div class="crit-t">${esc(title)}</div><div class="crit-b">${body}</div></div>`;
+  const list = arr => `<ul style="margin:0;padding-left:20px;display:grid;gap:4px">${arr.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
+  const tile = (v, l) => `<div class="card tile"><div class="v">${v}</div><div class="l">${esc(l)}</div></div>`;
+  return `
+  ${secHead(tr('a_h'), tr('a_p'), `<span class="chip read">${esc(tr('a_role'))}: ${esc(tr(role))}</span>`)}
+  <div class="card pad">
+    ${sec(1, tr('a_prob_t'), `<p>${esc(tr('a_prob'))}</p>`)}
+    ${sec(2, tr('a_goal_t'), `<p>${esc(tr('a_goal'))}</p>${list(tr('a_tasks'))}<p class="note brand">${esc(tr('a_hyp'))}</p>`)}
+    ${sec(3, tr('a_meth_t'), `<p>${esc(tr('a_meth'))}</p>`)}
+    ${sec(4, tr('a_data_t'), `<p class="muted small">${esc(tr('a_data_live'))}</p>
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr))">
+        ${tile(a.att, tr('a_d_att'))}${tile(a.att ? Math.round(a.ok / a.att * 100) + '%' : '—', tr('a_d_acc'))}${tile(a.stu, tr('a_d_stu'))}${tile(visibleWorks().length, tr('a_d_works'))}</div>
+      <div class="note"><b>${esc(tr('a_d_hyp'))}</b><br>${a.hn ? esc(fill(tr('a_d_hyp_ok'), { a:Math.round(a.fa), b:Math.round(a.la), n:a.hn })) : esc(tr('a_d_hyp_no'))}</div>`)}
+    ${sec(5, tr('a_src_t'), `${list(tr('a_src'))}<div><div class="lbl">${esc(tr('a_ai_t'))}</div><p>${esc(tr('a_ai'))}</p></div>`)}
+    ${sec(6, tr('a_next_t'), `<p>${esc(tr('a_next'))}</p>`)}
+  </div>
+  <div class="sec"><h3 style="font-size:21px;margin-bottom:10px">${esc(tr('a_access_t'))}</h3><div class="card pad">${list(tr('a_access'))}</div></div>
+  <div class="sec"><h3 style="font-size:21px">${esc(tr('r_rules'))}</h3><p class="muted small" style="margin:4px 0 12px">${esc(tr('r_rules_src'))}</p>${critTableHTML()}</div>`;
+}
+/* ============================================================
+   WORK DETAIL, JURY, FORM, FILES
+   ============================================================ */
+function statsBlock(vals, cdiv, unit){
+  if (vals.length < 3) return `<span class="muted">${esc(tr('need3'))}</span>`;
+  const st = seriesStats(vals, cdiv > 0 ? cdiv : 0);
+  const row = (k, v) => `<tr><td>${esc(tr(k))}</td><td class="n mono">${v}</td></tr>`;
+  return `<div class="tbl-w"><table class="tbl"><tbody>
+    ${row('r_n', st.n)}${row('r_mean', fnum(st.mean, st.dec + 1))}${row('r_dev', fnum(st.dev, st.dec + 1))}
+    ${st.dInst ? row('r_delta', fnum(st.dInst)) : ''}${row('r_abs', fnum(st.abs, st.dec))}${row('r_rel', isFinite(st.rel) ? fnum(st.rel, 1) + ' %' : '—')}
+  </tbody></table></div>
+  <div class="res" style="margin-top:8px">${esc(tr('r_rec'))}: ${esc(seriesRecord(st, unit))}</div>`;
+}
+function linkify(line){
+  return String(line).split(/(https?:\/\/[^\s<>"']+)/g).map((part, i) => {
+    if (i % 2 === 0) return esc(part);
+    const u = part.replace(/[.,;:)\]]+$/, ''), tail = part.slice(u.length);
+    return safeUrl(u) ? `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(u)}</a>${esc(tail)}` : esc(part);
+  }).join('');
+}
+const fmtSize = b => b >= 1048576 ? fnum(b / 1048576, 1) + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB';
+
+/* ---------- score box (visible to everyone) ---------- */
+function scoreBoxHTML(w){
+  const sc = S.scoreMap[w.key];
+  if (!sc) return `<div class="note brand">${esc(tr('no_score'))} · ${esc(tr('r_jury_note'))}</div>`;
+  const aw = awardOf(sc.total);
+  return `<div class="card pad" style="display:grid;grid-template-columns:auto 1fr;gap:14px 20px;align-items:center">
+    <div class="lcd" style="padding:12px 18px"><div class="lcd-v">${scoreText(sc.total)}</div><div class="lcd-l">/ 100 · ${esc(fill(tr(sc.n < 3 ? 'j_prelim' : 'j_full'), { n:sc.n }))}</div></div>
+    <div><div class="lbl">${esc(tr('award_word'))}</div>${aw ? `<span class="award a${aw.id}">${esc(T(aw.name))}</span>` : `<span class="award a0">${esc(tr('aw0'))}</span>`}
+      <div class="small muted" style="margin-top:8px">${esc(tr('r_jury_note'))}</div></div>
+    <div style="grid-column:1/-1;display:grid;gap:8px"><div class="lbl" style="margin:0">${esc(tr('j_by_crit'))}</div>
+      ${CRIT.map((c, i) => `<div style="display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center"><span class="crit-n">${i + 1}</span><div class="bar"><i style="width:${sc.crit[i] / c.max * 100}%"></i></div><span class="mono small">${fnum(sc.crit[i], 1)}/${c.max}</span></div>`).join('')}</div>
+  </div>`;
+}
+
+/* ---------- attachments ---------- */
+function attHTML(w){
+  const files = w.files || []; if (!files.length) return '';
+  return `<div><div class="lbl">${esc(tr('lbl_files'))}</div><div class="att">${files.map((a, i) => {
+    if (a.kind === 'img') return `<div class="att-i"><img alt="${esc(a.name)}" data-fid="${esc(a.id)}" data-doc="${esc(w.docId)}" data-parts="${a.parts || 1}" data-act="zoom"><div class="nm">${esc(a.name)}</div></div>`;
+    const isAsset = a.store === 'asset' && /^[0-9a-f]{32}$/.test(a.aid || '');
+    if (isAsset && /^video\//.test(a.type)) return `<div class="att-i" style="grid-column:span 2"><video controls preload="metadata" src="/_blob/${a.aid}" style="width:100%;max-height:200px"></video><div class="nm">${esc(a.name)}</div></div>`;
+    return `<div class="att-i"><div class="fileic">${ui('file')}</div><div class="nm">${esc(a.name)} · ${fmtSize(a.size || 0)}</div>
+      <div style="padding:0 8px 8px">${isAsset
+        ? `<a class="btn sm" href="/_blob/${a.aid}" target="_blank" rel="noopener noreferrer">${ui('ext')} ${esc(tr('f_open'))}</a>`
+        : `<button class="btn sm" data-act="dl-file" data-doc="${esc(w.docId)}" data-k="${esc(w.key)}" data-i="${i}">${ui('dl')} ${esc(tr('f_save'))}</button>`}</div></div>`;
+  }).join('')}</div></div>`;
+}
+async function fetchDbFile(docId, a){
+  const cacheKey = docId + '/' + a.id;
+  if (S.fc.has(cacheKey)) return S.fc.get(cacheKey);
+  const parts = await BACKEND.readParts(docId, a);
+  let out;
+  if (a.kind === 'img') out = safeImg(parts[0]);
+  else {
+    const bin = atob(parts.join('')), u8 = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+    out = new Blob([u8], { type:a.type || 'application/octet-stream' });
+  }
+  S.fc.set(cacheKey, out);
+  return out;
+}
+function hydrateImages(root){
+  if (!S.dbOk) return;
+  $$('img[data-fid]', root).forEach(async img => {
+    try {
+      const src = await fetchDbFile(img.dataset.doc, { id:img.dataset.fid, kind:'img', parts:+img.dataset.parts || 1 });
+      if (src) img.src = src;
+    } catch(e){ img.alt = tr('f_missing'); }
+  });
+}
+async function downloadFile(docId, a){
+  try {
+    if (!BACKEND.canSave) { toast(tr('f_fail'), 'bad'); return; }
+    const blob = await fetchDbFile(docId, a);
+    await BACKEND.saveFile(a.name, blob);
+    toast(tr('f_saved'), 'good');
+  } catch(e){ if (!(e && e.code === 'declined')) toast(tr('f_fail'), 'bad'); }
+}
+function zoom(src){
+  if (!src) return;
+  const lb = $('#lb');
+  lb.innerHTML = `<div class="dlg-h" style="padding:8px 10px;justify-content:flex-end"><button class="ibtn" data-act="close-lb" aria-label="${esc(tr('close'))}">${ui('x')}</button></div><div class="dlg-b" style="display:grid;place-items:center"><img src="${esc(src)}" alt=""></div>`;
+  try { lb.showModal(); } catch(e){ lb.setAttribute('open', ''); }
+}
+
+/* ---------- work dialog ---------- */
+function openWork(key){
+  const w = workByKey(key); if (!w) return;
+  S.openWork = key; S.dlgState = { t:'work', id:key };
+  const mine = w.docId === S.me.id && !w.example;
+  const cs = (i, inner) => `<div class="crit"><span class="crit-n">${i + 1}</span><div class="crit-t">${esc(T(CRIT[i].name))}<small>${CRIT[i].max} ${esc(tr('pts'))}</small></div><div class="crit-b">${inner || '<span class="muted">—</span>'}</div></div>`;
+  const fb = (lbl, txt) => txt && String(txt).trim() ? `<div><div class="lbl">${esc(lbl)}</div><p>${esc(txt)}</p></div>` : '';
+  const ul = (lbl, txt) => { const l = lines(txt); return l.length ? `<div><div class="lbl">${esc(lbl)}</div><ul style="margin:0;padding-left:20px;display:grid;gap:3px">${l.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''; };
+  const vals = parseNums(w.vals), cdiv = parseNum(w.cdiv);
+  const srcs = lines(w.sources);
+  const link = safeUrl(w.link);
+  const ready = readiness(w);
+  openDlg(`
+    <div class="dlg-h"><div style="flex:1;min-width:0">
+      <div class="row" style="margin-bottom:8px"><span class="chip brand">${esc(typeName(w.type))}</span><span class="chip">${esc(topicName(w))}</span><span class="chip">${esc(w.grade || '')}${esc(w.letter || '')} ${esc(tr('r_class'))}</span>${w.example ? `<span class="chip ex">${esc(tr('ex'))}</span>` : ''}${S.hidden[w.key] ? `<span class="chip warn">${esc(tr('hidden'))}</span>` : ''}</div>
+      <h2 id="dlgT">${esc(w.title)}</h2>
+      <div class="small muted" style="margin-top:6px">${esc(tr('by'))}: ${esc(w.authors)}${w.sup ? ` · ${esc(tr('sup'))}: ${esc(w.sup)}` : ''}${w.updated ? ` · ${esc(tr('updated'))}: ${esc(fdate(w.updated))}` : ''}</div>
+      <div style="margin-top:8px">${dotsHTML(ready)}</div></div>
+      <button class="ibtn" data-act="close" aria-label="${esc(tr('close'))}">${ui('x')}</button></div>
+    <div class="dlg-b">
+      <div id="wscore">${scoreBoxHTML(w)}</div>
+      <div style="margin-top:8px">
+      ${cs(0, fb(tr('lbl_problem'), w.problem) + fb(tr('lbl_relev'), w.relev))}
+      ${cs(1, fb(tr('lbl_goal'), w.goal) + ul(tr('lbl_tasks'), w.tasks) + fb(tr('lbl_hyp'), w.hyp))}
+      ${cs(2, fb(tr('lbl_methods'), w.methods) + (w.tb ? `<div><span class="chip brand">${ui('check')} ${esc(tr('tb_ok'))}</span></div>` : '') + fb(tr('lbl_safety'), w.tbText))}
+      ${cs(3, (vals.length ? `<div><div class="lbl">${esc(tr('tbl_title'))}${w.qty ? ': ' + esc(w.qty) : ''}${w.unit ? ', ' + esc(w.unit) : ''}</div><div class="row" style="margin-bottom:8px">${vals.map(v => `<span class="chip mono">${fnum(v)}</span>`).join('')}</div>${statsBlock(vals, isFinite(cdiv) ? cdiv : 0, w.unit)}</div>` : '') + fb(tr('lbl_analysis'), w.analysis) + attHTML(w))}
+      ${cs(4, fb(tr('lbl_diary'), w.diary) + (srcs.length ? `<div><div class="lbl">${esc(tr('lbl_src'))}</div><ol style="margin:0;padding-left:20px;display:grid;gap:3px">${srcs.map(x => `<li style="overflow-wrap:anywhere">${linkify(x)}</li>`).join('')}</ol></div>` : '') + (w.aiMode ? `<div><div class="lbl">${esc(tr('lbl_ai'))}</div><p><span class="chip ${w.aiMode === '1' ? 'read' : 'brand'}">${esc(tr(w.aiMode === '1' ? 'ai_used' : 'ai_none'))}</span></p>${w.aiText ? `<p style="margin-top:6px">${esc(w.aiText)}</p>` : ''}</div>` : ''))}
+      ${cs(5, fb(tr('lbl_concl'), w.concl) + fb(tr('lbl_appl'), w.appl) + fb(tr('lbl_lim'), w.lim) + fb(tr('lbl_refl'), w.refl))}
+      ${cs(6, link ? `<div><div class="lbl">${esc(tr('lbl_pres'))}</div><a class="btn" href="${esc(link)}" target="_blank" rel="noopener noreferrer">${ui('link')} ${esc(host(link))}</a></div>` : '')}
+      ${cs(7, fb(tr('lbl_contrib'), w.contrib))}
+      </div>
+      ${isJury() ? juryPanelHTML(w) : ''}
+      ${commentsForOwner(w)}
+    </div>
+    <div class="dlg-f">
+      ${mine ? `<button class="btn" data-act="edit-work" data-k="${esc(key)}">${ui('edit')} ${esc(tr('edit'))}</button><button class="btn danger" data-act="del-work" data-k="${esc(key)}" data-lbl="${esc(tr('del'))}">${ui('trash')} <span>${esc(tr('del'))}</span></button>` : ''}
+      ${isJury() ? `<button class="btn" data-act="hide-work" data-k="${esc(key)}">${ui(S.hidden[key] ? 'eye' : 'eyeoff')} ${esc(tr(S.hidden[key] ? 'unhide' : 'hide'))}</button>` : ''}
+      <span class="sp"></span><button class="btn" data-act="close">${esc(tr('close'))}</button>
+    </div>`);
+  hydrateImages($('#dlg'));
+  if (isJury()) fillJurorNames();
+}
+function commentsForOwner(w){
+  const sc = S.scoreMap[w.key];
+  if (!sc || isJury() || w.docId !== S.me.id) return '';
+  const cm = sc.list.filter(x => x.comment);
+  if (!cm.length) return '';
+  return `<div class="card pad" style="margin-top:16px"><h3 style="font-size:18px">${esc(tr('j_comments_h'))}</h3><ul style="margin:8px 0 0;padding-left:20px;display:grid;gap:6px">${cm.map(x => `<li>${esc(x.comment)}</li>`).join('')}</ul></div>`;
+}
+function juryPanelHTML(w){
+  const sc = S.scoreMap[w.key], mine = sc && sc.list.find(x => x.juror === S.me.id);
+  return `<div class="card pad" style="margin-top:16px" id="jpanel">
+    <h3 style="font-size:20px">${esc(tr('j_h'))}</h3><p class="muted small" style="margin-top:4px">${esc(tr('j_p'))}</p>
+    <div class="jury" style="margin-top:12px">${CRIT.map((c, i) => `<label for="jc-${i}" style="font-size:14px"><span class="crit-n">${i + 1}</span> ${esc(T(c.name))} <span class="muted mono small">/ ${c.max}</span></label><input class="in mono" id="jc-${i}" data-jc="${i}" type="number" min="0" max="${c.max}" step="1" inputmode="numeric" value="${mine ? mine.c[i] : ''}">`).join('')}</div>
+    <div class="fld" style="margin-top:12px"><label class="f" for="jcm">${esc(tr('j_comment'))}</label><textarea class="in" id="jcm" rows="2">${esc(mine ? mine.comment : '')}</textarea></div>
+    <div class="row"><span class="mono" id="jsum" style="font-weight:600">${esc(tr('j_total'))}: ${mine ? mine.total : '—'} / 100</span><span class="sp"></span><button class="btn pri" data-act="save-score" data-k="${esc(w.key)}">${ui('check')} ${esc(tr('save'))}</button></div>
+    ${sc ? `<hr style="border:0;border-top:1px solid var(--line);margin:14px 0"><div class="lbl">${esc(tr('j_jurors'))}</div><ul style="margin:6px 0 0;padding:0;list-style:none;display:grid;gap:4px">${sc.list.map((x, n) => `<li class="small"><span data-jn="${esc(x.juror)}" data-n="${n + 1}">${esc(tr('j_anon'))} ${n + 1}</span> — <b class="mono">${x.total}</b>${x.example ? ` <span class="chip ex">${esc(tr('ex'))}</span>` : ''}${x.comment ? `<div class="muted">${esc(x.comment)}</div>` : ''}</li>`).join('')}</ul>` : ''}
+  </div>`;
+}
+async function fillJurorNames(){
+  const els = $$('[data-jn]'); if (!els.length) return;
+  try {
+    const ps = await BACKEND.jurorNames(els.map(e => e.dataset.jn));
+    els.forEach(e => { const n = ps[e.dataset.jn]; if (n) e.textContent = n; });
+  } catch(e){}
+}
+function updateJurySum(){
+  let sum = 0, ok = true;
+  CRIT.forEach((c, i) => { const v = parseFloat(($('#jc-' + i) || {}).value); if (isFinite(v)) sum += v; else ok = false; });
+  const el = $('#jsum'); if (el) el.textContent = `${tr('j_total')}: ${ok ? sum : sum + '…'} / 100`;
+}
+async function submitScore(key){
+  const c = [];
+  for (let i = 0; i < CRIT.length; i++) {
+    const v = parseFloat($('#jc-' + i).value);
+    if (!isFinite(v) || v < 0 || v > CRIT[i].max) { toast(tr('j_range'), 'bad'); $('#jc-' + i).focus(); return; }
+    c.push(Math.round(v));
+  }
+  try { await saveScore(key, c, $('#jcm').value.trim().slice(0, 600)); toast(tr('j_saved'), 'good'); }
+  catch(e){ toast(String(e && e.message || e), 'bad'); }
+}
+
+/* ---------- delete / hide / examples / export ---------- */
+async function deleteAttachment(docId, a){
+  try { await BACKEND.deleteFile(docId, a); } catch(e){}
+}
+async function deleteWork(w){
+  try {
+    await removeWorkDoc(w.wid);
+    for (const a of (w.files || [])) await deleteAttachment(w.docId, a);
+    toast(tr('deleted'), 'good'); closeDlg();
+  } catch(e){ toast(String(e && e.message || e), 'bad'); }
+}
+async function removeExamples(){
+  try {
+    await BACKEND.removeExamples();
+    toast(tr('exdone'), 'good');
+  } catch(e){ toast(String(e && e.message || e), 'bad'); }
+}
+async function exportCsv(){
+  try {
+    const { g } = rankedByGrade();
+    const head = ['#', tr('f_grade'), tr('wf_title'), tr('wf_authors'), tr('f_topic'), tr('r_score'), tr('r_jur'), tr('award_word')].concat(CRIT.map((c, i) => 'C' + (i + 1) + ' /' + c.max));
+    const rows = [head];
+    ['7', '8'].forEach(gr => (g[gr] || []).forEach((w, i) => {
+      const sc = S.scoreMap[w.key], a = awardOf(sc.total);
+      rows.push([i + 1, gr + (w.letter || ''), w.title, w.authors, topicName(w), fnum(sc.total, 1), sc.n, a ? T(a.name) : ''].concat(sc.crit.map(x => fnum(x, 1))));
+    }));
+    const csv = '﻿' + rows.map(r => r.map(x => '"' + String(x).replace(/"/g, '""') + '"').join(';')).join('\r\n');
+    await BACKEND.saveFile('zerde-results.csv', new Blob([csv], { type:'text/csv' }));
+    toast(tr('f_saved'), 'good');
+  } catch(e){ if (!(e && e.code === 'declined')) toast(tr('f_fail'), 'bad'); }
+}
+
+/* ============================================================
+   WORK FORM
+   ============================================================ */
+const WF_KEYS = ['title','authors','grade','letter','sup','type','topic','problem','relev','goal','tasks','hyp','methods','tbText','qty','unit','cdiv','vals','analysis','diary','sources','aiMode','aiText','concl','appl','lim','refl','link','contrib'];
+function blankDraft(preset){
+  preset = preset || {};
+  const d = { id:uid('w'), grade:'7', letter:'', sup:'', type:preset.type || 'research', topic:preset.topic || 'other', tb:false, files:[], newFiles:[], removed:[], created:Date.now() };
+  WF_KEYS.forEach(k => { if (d[k] == null) d[k] = ''; });
+  d.authors = S.me.name || '';
+  Object.assign(d, preset.data || {});
+  return d;
+}
+function openForm(key, preset){
+  let d;
+  if (key) {
+    const w = workByKey(key); if (!w || w.docId !== S.me.id) return;
+    d = JSON.parse(JSON.stringify(w));
+    d.id = w.wid; d.newFiles = []; d.removed = []; d.files = d.files || [];
+    ['docId', 'key', 'wid'].forEach(k => delete d[k]);
+    WF_KEYS.forEach(k => { if (d[k] == null) d[k] = ''; });
+  } else d = blankDraft(preset);
+  S.draft = d; S.dlgState = { t:'form', id:key || '' };
+  openDlg(formHTML());
+  hydrateImages($('#dlg'));
+}
+function rerenderForm(){
+  const b = $('#dlg .dlg-b'), top = b ? b.scrollTop : 0;
+  $('#dlg').innerHTML = formHTML();
+  const nb = $('#dlg .dlg-b'); if (nb) nb.scrollTop = top;
+  hydrateImages($('#dlg'));
+}
+const fText = (name, label, o) => {
+  o = o || {}; const v = S.draft[name] || '';
+  return `<div class="fld" ${o.hid ? 'hidden' : ''} id="fld-${name}"><label class="f" for="d-${name}">${esc(label)}${o.req ? ' *' : ''}${o.hint ? ` <span class="h">— ${esc(o.hint)}</span>` : ''}</label>${o.area
+    ? `<textarea class="in" id="d-${name}" data-d="${name}" rows="${o.rows || 3}">${esc(v)}</textarea>`
+    : `<input class="in ${o.mono ? 'mono' : ''}" id="d-${name}" data-d="${name}" value="${esc(v)}" ${o.attrs || ''}>`}</div>`;
+};
+const fSel = (name, label, opts) => `<div class="fld"><label class="f" for="d-${name}">${esc(label)}</label><select class="in" id="d-${name}" data-d="${name}">${opts.map(o => `<option value="${esc(o[0])}" ${String(S.draft[name]) === String(o[0]) ? 'selected' : ''}>${esc(o[1])}</option>`).join('')}</select></div>`;
+const fsec = (i, inner) => `<div class="crit"><span class="crit-n">${i + 1}</span><div class="crit-t">${esc(T(CRIT[i].name))}<small>${CRIT[i].max} ${esc(tr('pts'))}</small></div><div class="crit-b" style="display:block">${inner}</div></div>`;
+function filesListHTML(){
+  const d = S.draft;
+  const items = d.files.map((a, i) => ({ a, i, ex:true })).concat(d.newFiles.map((a, i) => ({ a, i, ex:false })));
+  if (!items.length) return '';
+  return `<div class="att" style="margin-top:10px">${items.map(({ a, i, ex }) => `<div class="att-i">
+    ${a.kind === 'img' ? `<img alt="" ${ex ? `data-fid="${esc(a.id)}" data-doc="${esc(S.me.id)}" data-parts="${a.parts || 1}"` : `src="${esc(safeImg(a.dataUrl))}"`}>` : `<div class="fileic">${ui('file')}</div>`}
+    <div class="nm">${esc(a.name)}</div>
+    <button type="button" class="x" data-act="rm-file" data-ex="${ex ? 1 : 0}" data-i="${i}" aria-label="${esc(tr('del'))}">${ui('x')}</button></div>`).join('')}</div>`;
+}
+function refreshFiles(){ const el = $('#wf-flist'); if (el) { el.innerHTML = filesListHTML(); hydrateImages(el); } }
+function refreshFormLive(){
+  const d = S.draft, r = readiness(d);
+  const dots = $('#wf-dots'); if (dots) dots.innerHTML = dotsHTML(r);
+  const cnt = $('#wf-srccnt'); if (cnt) cnt.textContent = lines(d.sources).length + ' / 3';
+  const ser = $('#wf-ser'); if (ser) { const c = parseNum(d.cdiv); ser.innerHTML = statsBlock(parseNums(d.vals), isFinite(c) ? c : 0, d.unit); }
+}
+function formHTML(){
+  const d = S.draft, editing = !!S.dlgState.id;
+  const topics = INSTRUMENTS.concat(DIY).map(x => [x.id, T(x.name)]).concat([['other', tr('other_topic')]]);
+  return `
+  <div class="dlg-h"><div style="flex:1;min-width:0"><div class="kick">${esc(tr('readiness'))}</div><h2 id="dlgT">${esc(tr(editing ? 'wf_edit' : 'wf_new'))}</h2>
+    <div style="margin-top:8px" id="wf-dots">${dotsHTML(readiness(d))}</div><p class="hint">${esc(tr('readiness_n'))}</p></div>
+    <button class="ibtn" data-act="cancel-form" aria-label="${esc(tr('cancel'))}">${ui('x')}</button></div>
+  <form class="dlg-b" data-form="work" autocomplete="off" novalidate>
+    <h3 style="font-size:19px;margin-bottom:10px">${esc(tr('wf_general'))}</h3>
+    ${fText('title', tr('wf_title'), { req:true, attrs:'maxlength="160"' })}
+    <div class="fgrid">
+      ${fText('authors', tr('wf_authors'), { req:true, hint:tr('wf_authors_h'), attrs:'maxlength="200"' })}
+      ${fText('sup', tr('wf_sup'), { attrs:'maxlength="120"' })}
+    </div>
+    <div class="fgrid">
+      ${fSel('grade', tr('wf_grade'), [['7', '7'], ['8', '8']])}
+      ${fText('letter', tr('wf_letter'), { attrs:'maxlength="3"' })}
+      ${fSel('type', tr('wf_type'), [['research', tr('ty_research')], ['diy', tr('ty_diy')], ['study', tr('ty_study')]])}
+      ${fSel('topic', tr('wf_topic'), topics)}
+    </div>
+    <div style="margin-top:10px">
+    ${fsec(0, fText('problem', tr('wf_problem'), { req:true, area:true, hint:tr('wf_problem_h') }) + fText('relev', tr('wf_relev'), { area:true, rows:2 }))}
+    ${fsec(1, fText('goal', tr('wf_goal'), { req:true, area:true, rows:2 }) + fText('tasks', tr('wf_tasks'), { area:true }) + fText('hyp', tr('wf_hyp'), { area:true, rows:2 }))}
+    ${fsec(2, fText('methods', tr('wf_methods'), { area:true, rows:4, hint:tr('wf_methods_h') }) +
+      `<div class="fld"><label style="display:flex;gap:8px;align-items:center;font-weight:600"><input type="checkbox" id="d-tb" data-d="tb" ${d.tb ? 'checked' : ''} style="width:18px;height:18px"> ${esc(tr('wf_tb'))}</label></div>` +
+      fText('tbText', tr('wf_tb_txt'), { area:true, rows:2 }))}
+    ${fsec(3, `<p class="hint" style="margin:0 0 8px">${esc(tr('wf_data_h'))}</p>
+      <div class="fgrid">${fText('qty', tr('f_qty'), { attrs:'maxlength="80"' })}${fText('unit', tr('f_unit'), { attrs:'maxlength="16"' })}${fText('cdiv', tr('f_cdiv'), { mono:true, attrs:'inputmode="decimal"' })}</div>
+      ${fText('vals', tr('f_vals'), { area:true, rows:2, mono:true, hint:tr('f_vals_h') })}
+      <div id="wf-ser" style="margin-bottom:12px">${statsBlock(parseNums(d.vals), parseNum(d.cdiv) || 0, d.unit)}</div>
+      ${fText('analysis', tr('wf_analysis'), { area:true, rows:4, hint:tr('wf_analysis_h') })}
+      <div class="fld"><label class="f">${esc(tr('wf_files'))}</label>
+        <div class="drop" id="wf-drop" data-act="pick-file" tabindex="0" role="button">${ui('up')} ${esc(tr('wf_drop'))}<div class="hint">${esc(tr('wf_drop_h'))}${BACKEND.extHint ? ' ' + esc(tr('wf_drop_h_ed')) : ''}</div></div>
+        <input type="file" id="wf-file" multiple hidden accept="image/*,.pdf,.docx,.pptx,.xlsx,.csv,.txt,.md,.json,.zip,.mp4,.webm">
+        <div id="wf-flist">${filesListHTML()}</div></div>`)}
+    ${fsec(4, fText('diary', tr('wf_diary'), { area:true, rows:3 }) +
+      fText('sources', tr('wf_src'), { area:true, rows:4, hint:tr('wf_src_h') }) + `<div class="hint" style="margin:-8px 0 12px">${esc(tr('lbl_src'))}: <b class="mono" id="wf-srccnt">${lines(d.sources).length} / 3</b></div>` +
+      fSel('aiMode', tr('wf_ai'), [['', tr('choose')], ['0', tr('wf_ai0')], ['1', tr('wf_ai1')]]) +
+      fText('aiText', tr('wf_ai_txt'), { area:true, rows:2, hid:d.aiMode !== '1' }))}
+    ${fsec(5, fText('concl', tr('wf_concl'), { area:true }) + fText('appl', tr('wf_appl'), { area:true, rows:2 }) + fText('lim', tr('wf_lim'), { area:true, rows:2 }) + fText('refl', tr('wf_refl'), { area:true, rows:2 }))}
+    ${fsec(6, fText('link', tr('wf_link'), { hint:tr('wf_link_h'), attrs:'inputmode="url" maxlength="400"' }))}
+    ${fsec(7, fText('contrib', tr('wf_contrib'), { area:true, rows:2 }))}
+    </div>
+    <p class="err" id="wf-err" role="alert"></p>
+  </form>
+  <div class="dlg-f"><button class="btn pri" data-act="submit-work" id="wf-save">${ui('check')} ${esc(tr('publish'))}</button><button class="btn" data-act="cancel-form">${esc(tr('cancel'))}</button></div>`;
+}
+
+/* ---------- files ---------- */
+const ASSET_EXT = { pdf:'application/pdf', mp4:'video/mp4', webm:'video/webm', csv:'text/csv', md:'text/markdown', json:'application/json', txt:'text/plain' };
+const DB_EXT = ['pdf','docx','pptx','xlsx','csv','txt','md','json','zip','gif'];
+async function loadBitmap(file){
+  if (window.createImageBitmap) { try { return await createImageBitmap(file); } catch(e){} }
+  return await new Promise((res, rej) => {
+    const u = URL.createObjectURL(file), im = new Image();
+    im.onload = () => { URL.revokeObjectURL(u); res(im); };
+    im.onerror = () => rej(new Error(tr('up_type')));
+    im.src = u;
+  });
+}
+function drawJpeg(bmp, maxDim, q){
+  const bw = bmp.naturalWidth || bmp.width, bh = bmp.naturalHeight || bmp.height, sc = Math.min(1, maxDim / Math.max(bw, bh));
+  const w = Math.max(1, Math.round(bw * sc)), h = Math.max(1, Math.round(bh * sc));
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, w, h); x.drawImage(bmp, 0, 0, w, h);
+  return c.toDataURL('image/jpeg', q);
+}
+async function compressImage(f){
+  const bmp = await loadBitmap(f);
+  let dim = 1400, q = 0.8, url = '';
+  for (let i = 0; i < 12; i++) {
+    url = drawJpeg(bmp, dim, q);
+    if (url.length <= 170000) break;
+    q -= 0.1; if (q < 0.4) { q = 0.7; dim = Math.round(dim * 0.8); }
+  }
+  return { dataUrl:url, thumb:drawJpeg(bmp, 140, 0.6) };
+}
+async function prepareFile(f){
+  const ext = (f.name.split('.').pop() || '').toLowerCase();
+  if (/^image\/(jpeg|png|webp)$/.test(f.type)) {
+    const r = await compressImage(f);
+    return { tmp:uid('t'), name:f.name, type:'image/jpeg', kind:'img', size:Math.round(r.dataUrl.length * 0.75), dataUrl:r.dataUrl, thumb:r.thumb };
+  }
+  if (BACKEND.wantsAsset && BACKEND.wantsAsset(f, ext)) return { tmp:uid('t'), name:f.name, type:ASSET_EXT[ext], kind:'file', size:f.size, blob:f, store:'asset' };
+  if (!DB_EXT.includes(ext)) throw new Error(tr('up_type'));
+  if (f.size > BACKEND.maxFile) throw new Error(tr('up_big'));
+  return { tmp:uid('t'), name:f.name, type:f.type || 'application/octet-stream', kind:'file', size:f.size, blob:f, store:'db' };
+}
+async function addFiles(list){
+  const d = S.draft; if (!d) return;
+  for (const f of Array.from(list)) {
+    if (d.files.length + d.newFiles.length >= 6) { toast(tr('up_max'), 'bad'); break; }
+    try { d.newFiles.push(await prepareFile(f)); }
+    catch(e){ toast(f.name + ': ' + (e && e.message || tr('up_bad')), 'bad'); }
+  }
+  refreshFiles(); refreshFormLive();
+}
+const blobToB64 = b => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1] || ''); r.onerror = () => rej(r.error); r.readAsDataURL(b); });
+async function uploadNew(d, progress){
+  const out = [];
+  for (let n = 0; n < d.newFiles.length; n++) {
+    progress(n + 1, d.newFiles.length);
+    out.push(await BACKEND.putFile(d.newFiles[n], uid('f')));
+  }
+  return out;
+}
+function buildWork(d, added){
+  const w = { id:d.id, ownerId:S.me.id, tb:!!d.tb, files:d.files.concat(added), created:d.created || Date.now(), updated:Date.now() };
+  WF_KEYS.forEach(k => { w[k] = String(d[k] == null ? '' : d[k]).trim().slice(0, k === 'title' ? 160 : 6000); });
+  w.thumb = d.thumb || (d.newFiles.find(n => n.kind === 'img') || {}).thumb || '';
+  return w;
+}
+async function submitWork(){
+  const d = S.draft, err = $('#wf-err'), btn = $('#wf-save'); if (!d) return;
+  err.textContent = '';
+  if (!d.title.trim() || !d.authors.trim() || d.problem.trim().length < 3 || d.goal.trim().length < 3) { err.textContent = tr('v_required'); $('#dlg .dlg-b').scrollTop = 0; return; }
+  if (d.link.trim() && !safeUrl(d.link)) { err.textContent = tr('v_link'); return; }
+  btn.disabled = true; btn.textContent = tr('saving');
+  try {
+    const added = await uploadNew(d, (i, n) => { btn.textContent = `${tr('up_file')} ${i}/${n}…`; });
+    await saveWorkDoc(buildWork(d, added));
+    for (const a of d.removed) await deleteAttachment(S.me.id, a);
+    toast(tr('saved'), 'good');
+    S.draft = null; closeDlg();
+  } catch(e){
+    err.textContent = e && e.code === 'size' ? tr('v_size') : String(e && (e.message || e.code) || e);
+    btn.disabled = false; btn.innerHTML = ui('check') + ' ' + esc(tr('publish'));
+  }
+}
+/* ============================================================
+   BACKEND: Google Apps Script web app  (Google Sheet + Drive)
+   Used by the GitHub Pages version. Address is set in config.js.
+   Protocol: POST text/plain (JSON) → no CORS pre-flight; every answer is {ok:true,…} or {ok:false, err:'code'}.
+   ============================================================ */
+const BACKEND = (() => {
+  const CFG = Object.assign({ API_URL:'', POLL_SECONDS:20, MAX_FILE_MB:5 }, window.LAB_CONFIG || {});
+  CFG.POLL_SECONDS = Math.max(8, Number(CFG.POLL_SECONDS) || 20);
+  const MAXF = Math.max(0.2, Number(CFG.MAX_FILE_MB) || 5) * 1048576;
+  let token = store.get('lm.tok') || '';
+  let rev = 0, trev = 0, jurors = {};
+  let polling = false, again = false, force = false, failN = 0, lastPoll = 0, timer = 0, netWarned = false;
+  let trainTimer = 0, trainPending = null;
+
+  /* ----- texts that depend on the config ----- */
+  const mb = String(+(MAXF / 1048576).toFixed(1)).replace('.', ',');
+  UI.wf_drop_h = [`Фото сжимаются автоматически. Другие файлы — до ${mb} МБ (PDF, DOCX, PPTX, XLSX, CSV, TXT, ZIP). Видео и большие файлы — ссылкой.`, `Фото автоматты түрде кішірейтіледі. Басқа файлдар — ${mb} МБ-қа дейін (PDF, DOCX, PPTX, XLSX, CSV, TXT, ZIP). Бейне мен үлкен файлдар — сілтемемен.`];
+  UI.up_big = [`слишком большой (до ${mb} МБ). Загрузи на Google Drive и вставь ссылку.`, `тым үлкен (${mb} МБ-қа дейін). Google Drive-қа жүктеп, сілтемені қой.`];
+  if (!CFG.API_URL) UI.no_db = UI.no_api;
+
+  /* ----- transport ----- */
+  const fail = code => Object.assign(new Error(UI['e_' + code] ? tr('e_' + code) : tr('e_server') + ' (' + code + ')'), { code });
+  async function call(a, body, o){
+    o = o || {};
+    if (!CFG.API_URL) throw fail('config');
+    const ctl = typeof AbortController === 'function' ? new AbortController() : null;
+    const to = ctl && setTimeout(() => ctl.abort(), o.timeout || 60000);
+    let text;
+    try {
+      const res = await fetch(CFG.API_URL, {
+        method:'POST', headers:{ 'Content-Type':'text/plain;charset=utf-8' }, keepalive:!!o.keepalive,
+        body:JSON.stringify(Object.assign({ a, t:token }, body || {})), signal:ctl ? ctl.signal : undefined
+      });
+      text = await res.text();
+    } catch(e){ throw fail('network'); }
+    finally { if (to) clearTimeout(to); }
+    let r; try { r = JSON.parse(text); } catch(e){ throw fail('server'); }
+    if (!r || !r.ok) {
+      if (r && r.err === 'auth' && token) sessionLost();
+      throw fail(r && r.err || 'server');
+    }
+    return r;
+  }
+  function sessionLost(){
+    token = ''; store.set('lm.tok', '');
+    S.me = { id:null, name:'', canEdit:false, canWrite:null, role:'' }; rev = 0;
+    renderChrome(); renderTab(); toast(tr('session_exp'), 'bad');
+  }
+
+  /* ----- polling ----- */
+  async function refresh(forced){
+    if (forced) force = true;
+    if (polling) { again = true; return; }
+    polling = true;
+    try {
+      do {
+        again = false;
+        try {
+          const r = await call('poll', { rev:force ? 0 : rev, trev });
+          force = false; failN = 0; lastPoll = Date.now();
+          if (netWarned) { netWarned = false; toast(tr('net_back'), 'good'); }
+          apply(r);
+        } catch(e){
+          failN++;
+          if (S.dbOk === null) { S.dbOk = false; S.err = e.code; renderAll(); }
+          else if (failN === 3 && !netWarned) { netWarned = true; toast(tr('net_lost'), 'bad'); }
+          break;
+        }
+      } while (again);
+    } finally { polling = false; }
+  }
+  function apply(r){
+    if (r.badToken && token) { sessionLost(); }
+    const was = S.me.id, wasRole = S.me.role, first = S.dbOk !== true;
+    const me = r.me || null;
+    S.me = { id:me ? me.id : null, name:me ? me.name : '', role:me ? me.role : '', canEdit:!!me && me.role === 'jury', canWrite:me ? true : null };
+    let idChanged = was !== S.me.id || wasRole !== S.me.role;
+    if (r.works) {
+      S.works = r.works; S.scores = r.scores || []; S.hidden = r.hidden || {}; jurors = r.jurors || {};
+      rebuildScores(); S.loaded.works = S.loaded.scores = true; rev = r.rev;
+    } else if (idChanged) rev = 0;            // snapshot depends on who is asking → reload it
+    if (r.training) {
+      const mine = S.me.id && S.training[S.me.id], m = r.training;
+      if (mine && (mine.at || 0) > ((m[S.me.id] || {}).at || 0)) m[S.me.id] = mine;
+      S.training = m; S.loaded.training = true; trev = r.trev;
+    }
+    S.dbOk = true; S.err = null;
+    if (first) renderAll();
+    else if (idChanged) { renderChrome(); renderTab(); onData(); }
+    else onData();
+    if (idChanged && !r.works) refresh(true);
+  }
+  function schedule(){
+    clearTimeout(timer);
+    timer = setTimeout(async () => {
+      if (!document.hidden) await refresh();
+      schedule();
+    }, CFG.POLL_SECONDS * 1000 * (1 + Math.min(failN, 4)));
+  }
+  async function init(){
+    if (!CFG.API_URL) { S.dbOk = false; S.err = 'config'; renderAll(); return; }
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) flushTraining(true);
+      else if (Date.now() - lastPoll > 8000) refresh();
+    });
+    window.addEventListener('online', () => refresh());
+    window.addEventListener('pagehide', () => flushTraining(true));
+    await refresh(true);
+    schedule();
+  }
+
+  /* ----- writes ----- */
+  const wrote = async () => { await refresh(); };
+  async function saveWork(w){ await call('saveWork', { work:w }); await wrote(); }
+  async function removeWork(wid){ await call('removeWork', { wid }); await wrote(); }
+  async function saveScore(key, c, comment){ await call('saveScore', { key, c, comment }); await wrote(); }
+  async function toggleHidden(key){ await call('toggleHidden', { key }); await wrote(); }
+  async function removeExamples(){ await call('removeExamples'); await wrote(); }
+  function saveTraining(nd){                       // progress is saved in batches: not more often than every 6 s
+    if (!token || !S.me.id) return;
+    trainPending = nd; clearTimeout(trainTimer); trainTimer = setTimeout(() => flushTraining(false), 6000);
+  }
+  function flushTraining(unload){
+    clearTimeout(trainTimer);
+    if (!trainPending || !token) return;
+    const nd = trainPending; trainPending = null;
+    return call('saveTraining', { nd }, { keepalive:!!unload }).catch(() => { if (!trainPending) trainPending = nd; });
+  }
+
+  /* ----- files ----- */
+  async function readParts(docId, a){
+    const r = await call('file', { id:a.id }, { timeout:120000 });
+    return [a.kind === 'img' ? 'data:image/jpeg;base64,' + r.d : r.d];
+  }
+  async function putFile(f){
+    const d = f.kind === 'img' ? f.dataUrl : await blobToB64(f.blob);
+    const r = await call('upload', { name:f.name, kind:f.kind, d }, { timeout:180000 });
+    return { id:r.id, name:f.name, type:f.type, kind:f.kind, size:f.size, store:'gas' };
+  }
+  async function deleteFile(docId, a){ if (a && a.store === 'gas') await call('deleteFile', { id:a.id }); }
+  async function saveFile(filename, blob){
+    const url = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = url; a.download = filename; a.rel = 'noopener'; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  }
+  async function jurorNames(ids){ const o = {}; ids.forEach(i => { if (jurors[i]) o[i] = jurors[i]; }); return o; }
+
+  /* ----- account UI ----- */
+  function accountHTML(){
+    if (S.me.id) return `<div class="acct"><span class="who">${ui('user')}<b>${esc(S.me.name)}</b>${S.me.canEdit ? `<span class="chip read">${esc(tr('role_jury_s'))}</span>` : ''}</span><button class="btn sm" data-act="logout" title="${esc(tr('logout'))}" aria-label="${esc(tr('logout'))}">${ui('out')}<span class="lbl"> ${esc(tr('logout'))}</span></button></div>`;
+    if (S.dbOk) return `<div class="acct"><button class="btn sm pri" data-act="login" title="${esc(tr('login'))}" aria-label="${esc(tr('login'))}">${ui('user')}<span class="lbl"> ${esc(tr('login'))}</span></button></div>`;
+    return '';
+  }
+  const loginNote = () => `<div class="note brand act" style="margin-bottom:14px"><span>${esc(tr('login_need'))}</span><button class="btn sm pri" data-act="login">${ui('user')} ${esc(tr('login'))}</button></div>`;
+
+  S.auth = { mode:'login', name:'', pin:'', jury:false, key:'' };
+  function openAuth(){
+    const a = S.auth, q = id => $('#' + id);
+    if (q('au-name')) { a.name = q('au-name').value; a.pin = q('au-pin').value; a.jury = q('au-jury').checked; a.key = q('au-key').value; }
+    const reg = a.mode === 'reg';
+    S.dlgState = { t:'auth', id:'' };
+    openDlg(`
+    <div class="dlg-h"><div style="flex:1;min-width:0"><div class="kick">${esc(tr('acct'))}</div><h2 id="dlgT">${esc(tr(reg ? 'reg_h' : 'login_h'))}</h2></div>
+      <div class="seg" role="group" aria-label="${esc(tr('lang_lbl'))}"><button data-act="lang" data-v="ru" aria-pressed="${lang === 'ru'}">РУС</button><button data-act="lang" data-v="kk" aria-pressed="${lang === 'kk'}">ҚАЗ</button></div>
+      <button class="ibtn" data-act="close" aria-label="${esc(tr('close'))}">${ui('x')}</button></div>
+    <form class="dlg-b" data-form="auth" autocomplete="on" novalidate>
+      <p class="muted small" style="margin-bottom:14px">${esc(tr(reg ? 'reg_p' : 'login_p'))}</p>
+      <div class="fld"><label class="f" for="au-name">${esc(tr('au_name'))} <span class="h">— ${esc(tr('au_name_h'))}</span></label>
+        <input class="in" id="au-name" name="username" autocomplete="username" maxlength="60" value="${esc(a.name)}"></div>
+      <div class="fld"><label class="f" for="au-pin">${esc(tr('au_pin'))}</label>
+        <input class="in" id="au-pin" name="password" type="password" autocomplete="${reg ? 'new-password' : 'current-password'}" maxlength="32" value="${esc(a.pin)}"></div>
+      <label class="chk"><input type="checkbox" id="au-jury" ${a.jury ? 'checked' : ''}> ${esc(tr('au_jury'))}</label>
+      <div class="fld" id="au-keyw" ${a.jury ? '' : 'hidden'}><label class="f" for="au-key">${esc(tr('au_key'))} <span class="h">— ${esc(tr('au_key_h'))}</span></label>
+        <input class="in" id="au-key" type="password" autocomplete="off" maxlength="60" value="${esc(a.key)}"></div>
+      <p class="err" id="au-err" role="alert"></p>
+    </form>
+    <div class="dlg-f"><button class="btn pri" data-act="auth-go" id="au-go">${ui('check')} ${esc(tr(reg ? 'au_go_reg' : 'au_go_login'))}</button>
+      <button class="btn" data-act="auth-mode">${esc(tr(reg ? 'au_to_login' : 'au_to_reg'))}</button><span class="sp"></span><button class="btn" data-act="close">${esc(tr('cancel'))}</button></div>`);
+    setTimeout(() => { const f = q(a.name ? 'au-pin' : 'au-name'); if (f && document.activeElement !== f) f.focus(); }, 30);
+  }
+  async function doAuth(){
+    const a = S.auth, q = id => $('#' + id), err = q('au-err'), btn = q('au-go'); if (!err || !btn) return;
+    const name = q('au-name').value.trim(), pin = q('au-pin').value, jury = q('au-jury').checked, key = q('au-key').value.trim();
+    err.textContent = '';
+    if (name.length < 2) { err.textContent = tr('e_name'); q('au-name').focus(); return; }
+    if (a.mode === 'reg' ? pin.length < 4 : !pin) { err.textContent = tr('e_pin'); q('au-pin').focus(); return; }
+    if (jury && !key) { err.textContent = tr('e_badkey'); q('au-key').focus(); return; }
+    const label = btn.innerHTML; btn.disabled = true;
+    try {
+      const r = await call(a.mode === 'reg' ? 'register' : 'login', { name, pin, role:jury ? 'jury' : 'student', key:jury ? key : '' });
+      token = r.token; store.set('lm.tok', token);
+      Object.assign(a, { name:'', pin:'', jury:false, key:'' });
+      closeDlg(); rev = 0;
+      await refresh(true);
+      toast(fill(tr('welcome'), { n:r.me.name }), 'good');
+    } catch(e){ err.textContent = e.message; btn.disabled = false; btn.innerHTML = label; }
+  }
+  function logout(){
+    flushTraining(false);
+    token = ''; store.set('lm.tok', ''); rev = 0;
+    S.me = { id:null, name:'', canEdit:false, canWrite:null, role:'' };
+    renderChrome(); renderTab(); refresh(true); toast(tr('bye'));
+  }
+  function onAct(act){
+    if (act === 'login') { S.auth.mode = 'login'; openAuth(); }
+    else if (act === 'logout') logout();
+    else if (act === 'auth-mode') { S.auth.mode = S.auth.mode === 'reg' ? 'login' : 'reg'; openAuth(); }
+    else if (act === 'auth-go') doAuth();
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && e.target.closest && e.target.closest('form[data-form="auth"]')) { e.preventDefault(); doAuth(); }
+  });
+  document.addEventListener('change', e => {
+    if (e.target && e.target.id === 'au-jury') { const w = $('#au-keyw'); if (w) w.hidden = !e.target.checked; }
+  });
+
+  return {
+    name:'gas', init, saveWork, removeWork, saveScore, toggleHidden, saveTraining,
+    readParts, putFile, deleteFile, removeExamples, saveFile, jurorNames,
+    accountHTML, loginNote, openAuth, onAct, onSubmit:t => { if (t.dataset.form === 'auth') doAuth(); },
+    canSave:true, extHint:false, maxFile:MAXF
+  };
+})();
+/* ============================================================
+   EVENTS + BOOT
+   ============================================================ */
+function rerenderDlg(){
+  const s = S.dlgState; if (!s || !$('#dlg').open) return;
+  if (s.t === 'dev') openDevice(s.id);
+  else if (s.t === 'work') openWork(s.id);
+  else if (s.t === 'form') rerenderForm();
+  else if (s.t === 'auth' && BACKEND.openAuth) BACKEND.openAuth();
+}
+function setLang(v){
+  if (v === lang) return;
+  lang = v; store.set('lm.lang', v);
+  renderChrome(); renderTab(); rerenderDlg();
+}
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const act = el.dataset.act, v = el.dataset.v, k = el.dataset.k;
+  if (el.tagName === 'A') e.preventDefault();
+  switch (act) {
+    case 'tab': if ($('#dlg').open) closeDlg(); setTab(v); break;
+    case 'lang': setLang(v); break;
+    case 'theme': toggleTheme(); break;
+    case 'cat': S.cat = v; renderTab(); break;
+    case 'dev': openDevice(el.dataset.id); break;
+    case 'close': closeDlg(); break;
+    case 'close-lb': { const lb = $('#lb'); try { lb.close(); } catch(_){ lb.removeAttribute('open'); } lb.innerHTML = ''; break; }
+    case 'train-kind':
+      S.tr.kind = v; S.tr.q = null; S.tr.res = null;
+      if ($('#dlg').open) closeDlg();
+      if (S.tab !== 'lab') setTab('lab'); else renderTab();
+      break;
+    case 'tr-next': S.tr.q = newQuestion(S.tr.kind); S.tr.res = null; $('#trainer').outerHTML = trainerHTML(); break;
+    case 'new-work': {
+      if (!canPost()) { toast(tr('view_only'), 'bad'); break; }
+      const topic = el.dataset.topic;
+      openForm(null, { topic, type: el.dataset.type || (topic ? 'study' : 'research') });
+      break;
+    }
+    case 'ser-to-work':
+      if (canPost()) openForm(null, { type:'research', data:{ qty:S.ser.qty, unit:S.ser.unit, cdiv:S.ser.cdiv, vals:S.ser.vals } });
+      break;
+    case 'open-work': openWork(k); break;
+    case 'edit-work': openForm(k); break;
+    case 'del-work': {
+      const lbl = el.querySelector('span');
+      if (!el.dataset.armed) {
+        el.dataset.armed = '1'; lbl.textContent = tr('del_sure');
+        setTimeout(() => { if (el.isConnected) { el.dataset.armed = ''; lbl.textContent = el.dataset.lbl; } }, 4000);
+      } else { const w = workByKey(k); if (w) deleteWork(w); }
+      break;
+    }
+    case 'hide-work': toggleHidden(k).then(() => openWork(k)).catch(err => toast(String(err && err.message || err), 'bad')); break;
+    case 'save-score': submitScore(k); break;
+    case 'mine': S.wf.mine = !S.wf.mine; el.setAttribute('aria-pressed', String(S.wf.mine)); refreshWorksList(); break;
+    case 'export': exportCsv(); break;
+    case 'rm-examples': removeExamples(); break;
+    case 'dl-file': { const w = workByKey(k); if (w && w.files[+el.dataset.i]) downloadFile(w.docId, w.files[+el.dataset.i]); break; }
+    case 'zoom': zoom(el.getAttribute('src')); break;
+    case 'pick-file': { const f = $('#wf-file'); if (f) f.click(); break; }
+    case 'rm-file': {
+      const d = S.draft, i = +el.dataset.i;
+      if (el.dataset.ex === '1') d.removed.push(d.files.splice(i, 1)[0]); else d.newFiles.splice(i, 1);
+      refreshFiles(); refreshFormLive();
+      break;
+    }
+    case 'submit-work': submitWork(); break;
+    case 'cancel-form': closeDlg(); break;
+    default: if (BACKEND.onAct) BACKEND.onAct(act, el, v);
+  }
+});
+
+function onField(t){
+  if (t.dataset.d) {
+    if (!S.draft) return;
+    const key = t.dataset.d;
+    S.draft[key] = t.type === 'checkbox' ? t.checked : t.value;
+    if (key === 'aiMode') { const f = $('#fld-aiText'); if (f) f.hidden = t.value !== '1'; }
+    refreshFormLive();
+  } else if (t.dataset.in === 'cal') { S.cal[t.dataset.f] = t.value; $('#cal-out').innerHTML = calcDivOut(); }
+  else if (t.dataset.in === 'ser') { S.ser[t.dataset.f] = t.value; $('#ser-out').innerHTML = serOut(); }
+  else if (t.dataset.in === 'wf') { S.wf[t.dataset.f] = t.value; refreshWorksList(); }
+  else if (t.dataset.jc != null) updateJurySum();
+}
+document.addEventListener('input', e => onField(e.target));
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.id === 'wf-file') { addFiles(t.files); t.value = ''; return; }
+  if (t.type === 'checkbox' || t.tagName === 'SELECT') onField(t);
+});
+document.addEventListener('submit', e => { e.preventDefault(); if (e.target.dataset.form === 'trainer') checkTrainer(); else if (BACKEND.onSubmit) BACKEND.onSubmit(e.target); });
+document.addEventListener('keydown', e => {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.dataset && e.target.dataset.act === 'pick-file') { e.preventDefault(); e.target.click(); }
+});
+['dragover', 'dragenter'].forEach(n => document.addEventListener(n, e => { const d = e.target.closest && e.target.closest('#wf-drop'); if (d) { e.preventDefault(); d.classList.add('on'); } }));
+document.addEventListener('dragleave', e => { const d = e.target.closest && e.target.closest('#wf-drop'); if (d) d.classList.remove('on'); });
+document.addEventListener('drop', e => { const d = e.target.closest && e.target.closest('#wf-drop'); if (d) { e.preventDefault(); d.classList.remove('on'); addFiles(e.dataTransfer.files); } });
+
+const dlgEl = $('#dlg'), lbEl = $('#lb');
+dlgEl.addEventListener('cancel', e => { if (S.dlgState && S.dlgState.t === 'form') { e.preventDefault(); toast(tr('esc_form')); } });
+dlgEl.addEventListener('close', () => { S.dlgState = null; S.draft = null; S.openWork = null; dlgEl.innerHTML = ''; });
+dlgEl.addEventListener('click', e => { if (e.target === dlgEl && S.dlgState && S.dlgState.t !== 'form') closeDlg(); });
+lbEl.addEventListener('click', e => { if (e.target === lbEl) { try { lbEl.close(); } catch(_){ lbEl.removeAttribute('open'); } lbEl.innerHTML = ''; } });
+
+(function boot(){
+  const saved = store.get('lm.theme');
+  if (saved === 'dark' || saved === 'light') document.documentElement.setAttribute('data-theme', saved);
+  renderAll();
+  BACKEND.init();
+})();
+})();
+</script>
+</body></html>
