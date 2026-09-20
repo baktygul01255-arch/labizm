@@ -4,7 +4,7 @@
 window.LAB_CONFIG = {
   // Адрес веб-приложения Google Apps Script (заканчивается на /exec).
   // Получите его в шаге «Развёртывание» (см. README.md) и вставьте между кавычками.
-  API_URL: 'https://script.google.com/macros/s/AKfycbwQgIuRNaxdzJKHidrsXidvXIfE28r5Y2yV68k2AKHhVkzMTMiPEpFRpCYCnrK1hAAzSg/exec',
+  API_URL: 'https://script.google.com/macros/s/AKfycbwJGxENC0nY7L3WzjOUyDXSr1IKk-nRpYeBO42dUAVUlVhQWU09Tc7YbYT11RJrO9Oepg/exec',
 
   // Как часто (в секундах) телефон/компьютер проверяет, появились ли новые работы и оценки.
   POLL_SECONDS: 40,
