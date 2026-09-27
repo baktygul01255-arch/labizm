@@ -455,7 +455,7 @@ const INSTRUMENTS = [
          ['Манометр присоединяй к системе так, чтобы не превысить предел шкалы.','Манометрді жүйеге шкала шегінен аспайтындай етіп қос.'],
          ['Переводи единицы: 1 мм рт. ст. ≈ 133 Па.','Бірліктерді ауыстыр: 1 мм сын. бағ. ≈ 133 Па.']],
     safe:['Не подключай к системам под высоким давлением без учителя.','Мұғалімсіз жоғары қысымды жүйелерге қосба.'],
-    links:[{k:'video',u:'https://youtu.be/5jQfH9t8xXk?si=5nfmfXWocmh3dPov'}] },
+    links:[{k:'sim',u:'https://efizika.ru/html5/66/index.html'},{k:'video',u:'https://youtu.be/5jQfH9t8xXk?si=5nfmfXWocmh3dPov'}] },
   { id:'multi', icon:'multi', cat:'elec',
     name:['Мультиметр','Мультиметр'],
     measures:['Напряжение, ток, сопротивление и др.','Кернеу, ток, кедергі және т.б.'],
@@ -487,7 +487,7 @@ const DIY = [
   { id:'diy-psy', icon:'psy', name:['Психрометр из двух термометров','Екі термометрден жасалған психрометр'],
     desc:['Определение влажности по разности температур сухого и увлажнённого датчиков.','Құрғақ және дымқылданған датчиктердің температура айырмасы бойынша ылғалдылықты анықтау.'],
     u:[G+'1-onRAV8Ru8MKf0q_3-ExnL5sF8Kl_duU/view?usp=sharing', G+'19Bq0_D43cM_-DDfvEm-08wSaiflOvOKR/view?usp=sharing'] },
-  { id:'diy-areo', icon:'areo', name:['Самодельный ареометр','Өзі жасаған ареометр'],
+  { id:'diy-areo', icon:'areo', name:['Самодельный ареометр','Қолдан жасалған ареометр'],
     desc:['Поплавок с грузом для измерения плотности жидкостей на основе закона Архимеда.','Архимед заңы негізінде сұйықтардың тығыздығын өлшеуге арналған жүгі бар қалқыма.'],
     u:[G+'157V9Hxbqa1cJH5VIuqhTgZLHnOCF4YO8/view?usp=sharing', G+'1el3OE6TD-XPmSycPHdGZv-DptbWs2due/view?usp=sharing'] },
   { id:'diy-level', icon:'cond', name:['Электрический измеритель уровня','Электрлік деңгей өлшегіш'],
@@ -496,17 +496,29 @@ const DIY = [
   { id:'diy-cond', icon:'cond', name:['Кондуктометр (анализатор чистоты)','Кондуктометр (тазалық анализаторы)'],
     desc:['Прибор для проверки состава воды по её способности проводить электрический ток.','Судың құрамын оның электр тогын өткізу қабілеті бойынша тексеруге арналған құрал.'],
     u:[G+'1Qho8swBYfRCMBfbwFemQhaM6xH5E9axs/view?usp=sharing', G+'1QKnw-In2lBpyvSnf6ImepdN_s_6RIIZM/view?usp=sharing'] },
-  { id:'diy-scale', icon:'scales', name:['Рычажные весы своими руками','Өз қолыңмен жасалған иінді таразы'],
+  { id:'diy-scale', icon:'scales', name:['Рычажные весы своими руками','Қолдан жасалған иінді таразы'],
     desc:['Балансировочные весы из рейки на опоре — определение массы тела уравновешиванием эталонными гирями.','Тірекке қойылған жіңішке таяқшадан жасалған тепе-теңдік таразысы — дене массасын эталон гирьлерімен теңестіру арқылы анықтау.'],
-    u:[G+'1vf3xvxPxGWqr0bYjgXJLIrK7G8KwYCdf/view?usp=sharing', G+'1qw-upqJ184gt1E2zlX6hwfdiW7AREhzh/view?usp=sharing'] }
+    u:[G+'1vf3xvxPxGWqr0bYjgXJLIrK7G8KwYCdf/view?usp=sharing', G+'1qw-upqJ184gt1E2zlX6hwfdiW7AREhzh/view?usp=sharing'] },
+  { id:'diy-mano', icon:'mano', name:['Самодельный манометр','Қолдан жасалған манометр'],
+    desc:['Датчик давления из бутылки и трубки: изменение давления видно по уровню подкрашенной воды.','Бөтелке мен түтіктен жасалған қысым датчигі: қысымның өзгеруі бояулы судың деңгейі бойынша көрінеді.'],
+    u:[G+'1Q1Qqlv-eC6-6C_T21SG9Vqm4K_9aelBr/view?usp=sharing', G+'1CCb65SnRbeaqXdfe9BrGGnCtlMVmU8-F/view?usp=sharing'] },
+  { id:'diy-baro', icon:'mano', name:['Самодельный барометр','Қолдан жасалған барометр'],
+    desc:['Банка, затянутая шариком, и соломинка-стрелка показывают изменение атмосферного давления перед сменой погоды.','Шармен керілген банка мен қамыс-тілше ауа райы өзгермес бұрын атмосфералық қысымның өзгеруін көрсетеді.'],
+    u:[G+'14Hbo3pGHojbfRIMv5s_eN_8eaqfOweg_/view?usp=sharing', G+'1fTDKi30TTQFIDq0GnZrRjAPCFdBHnTaE/view?usp=sharing'] },
+  { id:'diy-rain', icon:'cyl', name:['Самодельный дождемер','Қолдан жасалған жаңбыр өлшегіш'],
+    desc:['Ёмкость со шкалой для измерения количества выпавших осадков в миллиметрах.','Жауын-шашын мөлшерін миллиметрмен өлшеуге арналған шкаласы бар ыдыс.'],
+    u:[G+'1g_VSXClyNqet5xcg9KjS5Hx0Qkd8Hzbw/view?usp=sharing', G+'14U9OXBmcS62u-xSIYMRhMntspXwYWAKa/view?usp=sharing'] },
+  { id:'diy-waterclock', icon:'gauge', name:['Водяные часы','Су сағаты'],
+    desc:['Сосуд с равномерно вытекающей водой — измерение времени по уровню жидкости или числу капель.','Суы біркелкі ағатын ыдыс — уақытты сұйықтық деңгейі немесе тамшылар саны бойынша өлшеу.'],
+    u:[G+'1t5uFjkaZqNGtdwKZfBO0kXDc8nBg7RqF/view?usp=sharing', G+'1kCQZBRCWtM0qlE5hGgm1peAhL7i-KIQ5/view?usp=sharing'] }
 ];
 
 const RES_LINKS = {
-  test:'https://docs.google.com/forms/d/e/1FAIpQLScCNeZbXO0BtTYdyXkiLFlHxhI7jYi59Qsvwx0hwvTcnY9aYQ/viewform?usp=sharing',
+  test:['https://forms.gle/MdX5oWKeKbRHVigZ7','https://forms.gle/aTWNkjxruDz5Nx3o6'],
   video:G+'1G-t-CWCI1VQU7GgVVXdcYvdneCqR0ZjR/view?usp=sharing',
   bot:'https://gemini.google.com/gem/1tCROUDemr9upiEH808M8kSpAq8czhwje?usp=sharing',
-  theory:G+'14k0P9Svvj1GJTqENZs7RfKyYT4-a-r35/view?usp=sharing',
-  safety:G+'1vGh937NJY9MFrNW-guy_FuKicjydjP-J/view?usp=sharing'
+  theory:[G+'14k0P9Svvj1GJTqENZs7RfKyYT4-a-r35/view?usp=sharing','https://drive.google.com/file/d/1kNT3DKbYzRSlVMIdxUrSXTqkcBTz6r57/view?usp=sharing'],
+  safety:[G+'1vGh937NJY9MFrNW-guy_FuKicjydjP-J/view?usp=sharing','https://drive.google.com/file/d/19RDB7ndGCER8QMw2rIlz3LzFBZ-b1U-o/view?usp=sharing']
 };
 
 const SAFETY = [
@@ -583,7 +595,7 @@ const UI = {
   l_docru:['Материал (рус.)','Материал (рус.)'], l_dockk:['Материал (қаз.)','Материал (қаз.)'],
   train_this:['Тренироваться','Жаттығу'], make_work:['Сделать работу об этом','Осы туралы жұмыс жасау'],
   diy_h:['Сделай своими руками','Өз қолыңмен жаса'],
-  diy_p:['Самодельные приборы — идеи для проектов. Открой инструкцию и оформи свою работу.','Өзі жасаған құралдар — жобаға арналған идеялар. Нұсқаулықты аш та, өз жұмысыңды рәсімде.'],
+  diy_p:['Самодельные приборы — идеи для проектов. Открой инструкцию и оформи свою работу.','Қолдан жасалған құралдар — жобаға арналған идеялар. Нұсқаулықты аш та, өз жұмысыңды рәсімде.'],
   open_guide:['Инструкция','Нұсқаулық'], make_project:['Сделать проект','Жоба жасау'],
   safe_h:['Техника безопасности','Қауіпсіздік техникасы'],
   safe_p:['Обязательный материал перед любым экспериментом.','Кез келген экспериментке дейін міндетті материал.'],
@@ -633,7 +645,7 @@ const UI = {
   w_p:['Проекты, опыты и самодельные приборы. Нажми на карточку, чтобы открыть работу.','Жобалар, тәжірибелер және өзі жасаған құралдар. Жұмысты ашу үшін карточканы бас.'],
   search:['Поиск','Іздеу'], f_grade:['Класс','Сынып'], f_type:['Вид работы','Жұмыс түрі'], f_topic:['Прибор / тема','Құрал / тақырып'], f_sort:['Порядок','Реттілік'],
   g_all:['Все классы','Барлық сынып'], ty_all:['Все виды','Барлық түр'], top_all:['Все приборы','Барлық құрал'],
-  ty_research:['Исследование','Зерттеу'], ty_diy:['Самодельный прибор','Өзі жасаған құрал'], ty_study:['Изучение прибора','Құралды зерттеу'],
+  ty_research:['Исследование','Зерттеу'], ty_diy:['Самодельный прибор','Қолдан жасалған құрал'], ty_study:['Изучение прибора','Құралды зерттеу'],
   s_new:['Сначала новые','Алдымен жаңалары'], s_best:['По баллам','Балл бойынша'],
   mine:['Мои работы','Менің жұмыстарым'],
   w_empty:['Пока нет работ. Стань первым — добавь свою!','Әзірге жұмыс жоқ. Бірінші бол — өзіңдікін қос!'],
@@ -1024,7 +1036,7 @@ function renderChrome(){
       </div>
       <button class="ibtn" data-act="theme" title="${esc(dark ? tr('theme_to_light') : tr('theme_to_dark'))}" aria-label="${esc(dark ? tr('theme_to_light') : tr('theme_to_dark'))}">${ui(dark ? 'sun' : 'moon')}</button>
     </div></div>`;
-  $('#foot').textContent = tr('foot');
+  $('#foot').innerHTML = `<div>${esc(tr('foot'))}</div><div class="row" style="margin-top:8px;flex-wrap:wrap">${extLink('https://drive.google.com/file/d/1X5y9Gw8IGxMXjXYJx5qYgktjfjPfjbiq/view?usp=sharing','Инструкция по приложению (рус.)')}${extLink('https://drive.google.com/file/d/15nWpZZgniP1_VMabI_VECGFA1hCcN1er/view?usp=sharing','Қолданба нұсқаулығы (қаз.)')}</div>`;
   renderChromeCounts();
 }
 function renderChromeCounts(){
@@ -1118,7 +1130,7 @@ function viewDev(){
   </section>
 
   <section class="sec" aria-labelledby="sf">
-    <div class="sec-h"><div><h2 id="sf">${esc(tr('safe_h'))}</h2><p>${esc(tr('safe_p'))}</p></div><div>${extLink(RES_LINKS.safety, tr('res_safety'))}</div></div>
+    <div class="sec-h"><div><h2 id="sf">${esc(tr('safe_h'))}</h2><p>${esc(tr('safe_p'))}</p></div><div>${extLink(T(RES_LINKS.safety), tr('res_safety'))}</div></div>
     <div class="ticks"></div><div style="height:16px"></div>
     <ol class="saf">${SAFETY.map(s => `<li><span>${esc(T(s))}</span></li>`).join('')}</ol>
   </section>
@@ -1127,7 +1139,7 @@ function viewDev(){
     <div class="sec-h"><div><h2>${esc(tr('res_h'))}</h2></div></div>
     <div class="ticks"></div><div style="height:16px"></div>
     <div class="linkrow">
-      ${extLink(RES_LINKS.test, tr('res_test'))}${extLink(RES_LINKS.video, tr('res_video'))}${extLink(RES_LINKS.bot, tr('res_bot'))}${extLink(RES_LINKS.theory, tr('res_theory'))}
+      ${extLink(T(RES_LINKS.test), tr('res_test'))}${extLink(RES_LINKS.video, tr('res_video'))}${extLink(RES_LINKS.bot, tr('res_bot'))}${extLink(T(RES_LINKS.theory), tr('res_theory'))}
     </div>
     <p class="hint" style="margin-top:8px">${esc(tr('ext_note'))}</p>
   </section>`;
