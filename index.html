@@ -444,7 +444,7 @@ const INSTRUMENTS = [
          ['Соблюдай полярность: «+» прибора — к плюсу источника.','Полярлықты сақта: құралдың «+» — көздің плюсіне.'],
          ['Выбирай предел измерения с запасом; цепь включай только после проверки учителем.','Өлшеу шегін қормен таңда; тізбекті мұғалім тексергеннен кейін ғана қос.']],
     safe:['Собирай цепь при отключённом источнике; используй только школьные источники тока.','Тізбекті көз өшірулі кезде жина; тек мектептік ток көздерін қолдан.'],
-    links:[{k:'sim',u:EF+'51/index.html'},{k:'doc',u:G+'1wfbDsJ3GklTd1sGoRmM7ihmI4mJZi212/view?usp=sharing'}] },
+    links:[{k:'sim',u:EF+'51/index.html'}] },
   { id:'mano', icon:'mano', cat:'mech',
     name:['Манометр / барометр','Манометр / барометр'],
     measures:['Давление: атмосферное и в закрытых системах','Қысым: атмосфералық және тұйық жүйелердегі'],
@@ -466,7 +466,7 @@ const INSTRUMENTS = [
          ['Щупы: чёрный — в гнездо COM, красный — в гнездо нужной величины.','Щуптар: қара — COM ұяшығына, қызыл — қажетті шамаға арналған ұяшыққа.'],
          ['Ток измеряй последовательно, напряжение — параллельно; сопротивление — только на обесточенном участке.','Токты тізбектей, кернеуді параллель өлше; кедергіні тек тоғы жоқ учаскеде өлше.']],
     safe:['Не измеряй напряжение сети 220 В.','220 В желі кернеуін өлшеме.'],
-    links:[{k:'doc',u:G+'1xHdG_mmrMuIWfwEiXY_7neeSW-jCdQam/view?usp=sharing'}] },
+    links:[{k:'sim',u:'https://electricalschool.info/multimeter-app.html'}] },
   { id:'calor', icon:'calor', cat:'heat',
     name:['Калориметр','Калориметр'],
     measures:['Количество теплоты','Жылу мөлшері'],
@@ -477,25 +477,28 @@ const INSTRUMENTS = [
          ['Опусти тело или добавь вещество, перемешивай и дождись выравнивания температур.','Денені түсір немесе зат қос, араластыр да, температура теңескенше күт.'],
          ['Найди Q = c·m·Δt и учти: часть тепла уходит в окружающую среду.','Q = c·m·Δt табыңыз және жылудың бір бөлігі қоршаған ортаға кететінін ескер.']],
     safe:['Горячая вода: работай с прихватками, не наклоняйся над сосудом.','Ыстық су: қолғаппен жұмыс істе, ыдыстың үстіне еңкейме.'],
-    links:[{k:'doc',u:G+'1Pph6ZjTkAXTjVpd8OQveg0iVVUZvQ3Eg/view?usp=sharing'}] }
+    links:[{k:'docru',u:G+'1Pph6ZjTkAXTjVpd8OQveg0iVVUZvQ3Eg/view?usp=sharing'},{k:'dockk',u:'https://drive.google.com/file/d/1NbjJmqewOcvK2IN0xMnRu-ViwWGsTkB_/view?usp=sharing'}] }
 ];
 
 const DIY = [
   { id:'diy-hyg', icon:'hyg', name:['Гигрометр из салфетки или волоса','Майлықтан немесе шаштан жасалған гигрометр'],
     desc:['Измерение влажности через деформацию материалов при поглощении паров воды.','Су буын сіңіргенде материалдардың деформациясы арқылы ылғалдылықты өлшеу.'],
-    u:G+'1Ytor_0ajY7YfKZ8uuTFfpytWVWi2LBWV/view?usp=sharing' },
+    u:[G+'1RBKJrA2KTc9uHhPysr3Bke42LCRmJ4xp/view?usp=sharing', G+'12HjagM2ONE5l21jxDk0hYP4XnjmBrwi4/view?usp=sharing'] },
   { id:'diy-psy', icon:'psy', name:['Психрометр из двух термометров','Екі термометрден жасалған психрометр'],
     desc:['Определение влажности по разности температур сухого и увлажнённого датчиков.','Құрғақ және дымқылданған датчиктердің температура айырмасы бойынша ылғалдылықты анықтау.'],
-    u:G+'1sFyR3jOcFh2iZ6sQdPjT-msJ_AySJRz3/view?usp=sharing' },
+    u:[G+'1-onRAV8Ru8MKf0q_3-ExnL5sF8Kl_duU/view?usp=sharing', G+'19Bq0_D43cM_-DDfvEm-08wSaiflOvOKR/view?usp=sharing'] },
   { id:'diy-areo', icon:'areo', name:['Самодельный ареометр','Өзі жасаған ареометр'],
     desc:['Поплавок с грузом для измерения плотности жидкостей на основе закона Архимеда.','Архимед заңы негізінде сұйықтардың тығыздығын өлшеуге арналған жүгі бар қалқыма.'],
-    u:G+'1Y_YnluNry9D0_FbStVmn5rX-jt4iLmjL/view?usp=sharing' },
+    u:[G+'157V9Hxbqa1cJH5VIuqhTgZLHnOCF4YO8/view?usp=sharing', G+'1el3OE6TD-XPmSycPHdGZv-DptbWs2due/view?usp=sharing'] },
   { id:'diy-level', icon:'cond', name:['Электрический измеритель уровня','Электрлік деңгей өлшегіш'],
     desc:['Датчик, определяющий количество жидкости через изменение сопротивления в цепи.','Тізбектегі кедергінің өзгеруі арқылы сұйық мөлшерін анықтайтын датчик.'],
-    u:G+'1nEMeZYGlkRXyuDdlVAjD_l3mon3ivsu0/view?usp=sharing' },
+    u:[G+'1fw2lzUd9_yhokZYia--rV1AJP1UTGCl2/view?usp=sharing', G+'1sr_zmWpG3GzMl-BVlm4-4r3_3aI5SSi6/view?usp=sharing'] },
   { id:'diy-cond', icon:'cond', name:['Кондуктометр (анализатор чистоты)','Кондуктометр (тазалық анализаторы)'],
     desc:['Прибор для проверки состава воды по её способности проводить электрический ток.','Судың құрамын оның электр тогын өткізу қабілеті бойынша тексеруге арналған құрал.'],
-    u:G+'1IH78KYCfVohgkZUATowEyHQV211HhaL_/view?usp=sharing' }
+    u:[G+'1Qho8swBYfRCMBfbwFemQhaM6xH5E9axs/view?usp=sharing', G+'1QKnw-In2lBpyvSnf6ImepdN_s_6RIIZM/view?usp=sharing'] },
+  { id:'diy-scale', icon:'scales', name:['Рычажные весы своими руками','Өз қолыңмен жасалған иінді таразы'],
+    desc:['Балансировочные весы из рейки на опоре — определение массы тела уравновешиванием эталонными гирями.','Тірекке қойылған жіңішке таяқшадан жасалған тепе-теңдік таразысы — дене массасын эталон гирьлерімен теңестіру арқылы анықтау.'],
+    u:[G+'1vf3xvxPxGWqr0bYjgXJLIrK7G8KwYCdf/view?usp=sharing', G+'1qw-upqJ184gt1E2zlX6hwfdiW7AREhzh/view?usp=sharing'] }
 ];
 
 const RES_LINKS = {
@@ -577,6 +580,7 @@ const UI = {
   how_to:['Как пользоваться','Қалай қолданылады'], safety_h:['Безопасность','Қауіпсіздік'],
   materials:['Материалы','Материалдар'],
   l_sim:['Симулятор','Симулятор'], l_video:['Видео','Бейне'], l_doc:['Материал','Материал'],
+  l_docru:['Материал (рус.)','Материал (рус.)'], l_dockk:['Материал (қаз.)','Материал (қаз.)'],
   train_this:['Тренироваться','Жаттығу'], make_work:['Сделать работу об этом','Осы туралы жұмыс жасау'],
   diy_h:['Сделай своими руками','Өз қолыңмен жаса'],
   diy_p:['Самодельные приборы — идеи для проектов. Открой инструкцию и оформи свою работу.','Өзі жасаған құралдар — жобаға арналған идеялар. Нұсқаулықты аш та, өз жұмысыңды рәсімде.'],
@@ -1040,7 +1044,7 @@ function renderTab(){
 }
 const secHead = (h, p, extra) => `<div class="sec-h"><div><h2>${esc(h)}</h2>${p ? `<p>${esc(p)}</p>` : ''}</div>${extra ? `<div>${extra}</div>` : ''}</div><div class="ticks"></div><div style="height:16px"></div>`;
 const extLink = (u, label, kind) => `<a class="btn sm" href="${esc(u)}" target="_blank" rel="noopener noreferrer">${ui('ext')} ${esc(label)}</a>`;
-const linkLabel = k => tr(k === 'sim' ? 'l_sim' : k === 'video' ? 'l_video' : 'l_doc');
+const linkLabel = k => tr(k === 'sim' ? 'l_sim' : k === 'video' ? 'l_video' : k === 'docru' ? 'l_docru' : k === 'dockk' ? 'l_dockk' : 'l_doc');
 
 /* ---------- NOTICES ---------- */
 function statusNote(){
@@ -1107,7 +1111,7 @@ function viewDev(){
         <div class="dev-top"><span class="dev-ic">${ic(d.icon)}</span><h3>${esc(T(d.name))}</h3></div>
         <p class="small muted">${esc(T(d.desc))}</p>
         <div class="row" style="margin-top:auto">
-          ${extLink(d.u, tr('open_guide'))}
+          ${extLink(T(d.u), tr('open_guide'))}
           ${canPost() ? `<button class="btn sm pri" data-act="new-work" data-topic="${d.id}" data-type="diy">${esc(tr('make_project'))}</button>` : ''}
         </div>
       </div>`).join('')}</div>
